@@ -1,0 +1,1013 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Titan Barbershop</title>
+    <link rel="stylesheet" href="/static/homebarber.css" />
+    <link rel="stylesheet" href="/static/alerts.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body>
+    <!-- ═══════════════════ HEADER ═══════════════════ -->
+    <header class="header">
+      <div class="block">
+        <img
+          class="imagen-de-barberia"
+          src="/images/titanicon.jpeg"
+          alt="Logo Titan Barbershop"
+        />
+      </div>
+      <nav class="navigation-pill-list" aria-label="Navegación principal">
+        <a href="/perfil" class="navigation-pill">
+          <span>Mi Perfil</span>
+        </a>
+        <a href="/homebarber" class="navigation-pill">
+          <span>Inicio</span>
+        </a>
+        <a href="/barber_agenda" class="navigation-pill">
+          <span>Agenda</span>
+        </a>
+        <a href="/notibarbero" class="navigation-pill">
+          <span>Notificaciones</span>
+        </a>
+        <a href="/panel" class="navigation-pill">
+          <span>Panel de Control</span>
+        </a>
+        <a href="/" class="navigation-pill">
+          <span>Cerrar Sesión</span>
+        </a>
+      </nav>
+    </header>
+
+    <!-- ═══════════════════ MAIN ═══════════════════ -->
+    <main class="main-content">
+      <!-- ── Modal: Nuevo / Editar Mensaje ── -->
+      <div class="modal" id="message-modal" style="display: none">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title" id="message-modal-title">Nuevo mensaje</h2>
+            <button class="close-modal" id="close-message-modal">×</button>
+          </div>
+          <form id="message-form" class="upload-form">
+            <input type="hidden" id="message-id" value="" />
+            <div class="form-group">
+              <label for="message-text">Mensaje</label>
+              <textarea
+                id="message-text"
+                name="message-text"
+                rows="4"
+                maxlength="700"
+                placeholder="Escribe aquí el mensaje que verán tus clientes"
+                required
+              ></textarea>
+            </div>
+            <div class="form-group">
+              <label for="message-type">Tipo</label>
+              <select id="message-type" name="message-type">
+                <option value="info">Información</option>
+                <option value="ocupado">Ocupado</option>
+                <option value="trabajando">Trabajando</option>
+              </select>
+            </div>
+            <div class="form-actions">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                id="cancel-message"
+              >
+                Cancelar
+              </button>
+              <button type="submit" class="btn btn-primary">
+                Guardar mensaje
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- ── Sección Mensajes ── -->
+      <section class="messages-section">
+        <div class="catalog-header">
+          <h2 class="catalog-title">Mensajes para tus clientes</h2>
+          <button class="btn btn-primary" id="add-message-btn">
+            Nuevo mensaje
+          </button>
+        </div>
+        <div class="messages-container" id="messages-container-barber"></div>
+      </section>
+
+      <!-- ── Sección Catálogo ── -->
+      <section class="catalog-section">
+        <div class="catalog-header">
+          <h2 class="catalog-title">Mis Trabajos</h2>
+          <button class="btn btn-primary" id="add-image">
+            Agregar Nuevo Trabajo
+          </button>
+        </div>
+        <div class="catalog-container" id="catalog-container">
+          <div class="empty-catalog" id="empty-catalog">
+            <p>Aún no has agregado trabajos a tu catálogo.</p>
+            <p>Haz clic en "Agregar Nuevo Trabajo" para comenzar.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ═══════════════════ MODAL: Subir / Editar Trabajo ═══════════════════ -->
+    <div class="modal" id="upload-modal" style="display: none">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title" id="modal-title">
+            Agregar Nuevo Trabajo al Catálogo
+          </h2>
+          <button class="close-modal" id="close-modal">×</button>
+        </div>
+        <form id="upload-form" class="upload-form">
+          <input type="hidden" id="edit-id" name="edit-id" value="" />
+
+          <div class="form-group">
+            <label for="image-name">Nombre del Trabajo</label>
+            <input
+              type="text"
+              id="image-name"
+              name="image-name"
+              placeholder="Ej: Corte Fade Moderno"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="image-description">Descripción</label>
+            <textarea
+              id="image-description"
+              name="image-description"
+              rows="4"
+              placeholder="Describe el trabajo realizado, técnicas utilizadas, etc."
+            ></textarea>
+          </div>
+
+          <div class="form-group" id="barber-field-group" style="display: none">
+            <label for="image-barber">Barbero (autor del corte)</label>
+            <select id="image-barber" name="image-barber"></select>
+            <p class="field-note">Nombre del barbero que realizó el corte</p>
+          </div>
+
+          <div class="form-group">
+            <label for="image-file">Imagen</label>
+            <input
+              type="file"
+              id="image-file"
+              name="image-file"
+              accept="image/*"
+            />
+            <img id="image-preview" class="image-preview" alt="Vista previa" />
+            <p class="image-note" id="image-note">
+              Selecciona una imagen para subir
+            </p>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" id="cancel-upload">
+              Cancelar
+            </button>
+            <button type="submit" class="btn btn-primary" id="submit-button">
+              Guardar en Catálogo
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ═══════════════════ MODAL: Confirmar Eliminación ═══════════════════ -->
+    <div class="modal" id="delete-modal" style="display: none">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">Confirmar Eliminación</h2>
+          <button class="close-modal" id="close-delete-modal">×</button>
+        </div>
+        <div class="delete-confirmation">
+          <p>¿Estás seguro de que deseas eliminar este trabajo del catálogo?</p>
+          <p><strong id="delete-item-name"></strong></p>
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" id="cancel-delete">
+              Cancelar
+            </button>
+            <button type="button" class="btn btn-danger" id="confirm-delete">
+              Eliminar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════ FOOTER ═══════════════════ -->
+    <footer class="footer">
+      <div class="footer-logo">
+        <img
+          class="imagen-de-barberia"
+          src="/images/titanicon.jpeg"
+          alt="Logo Titan Barbershop"
+        />
+      </div>
+      <nav class="text-link-list" aria-labelledby="footer-contact">
+        <div class="text-strong-wrapper">
+          <h2 id="footer-contact" class="text-strong">
+            <span class="text-strong-2">contacto</span>
+          </h2>
+        </div>
+        <ul class="footer-list">
+          <li class="text-link-list-item">
+            <a href="tel:9837324637" class="list-item">9837324637</a>
+          </li>
+          <li class="text-link-list-item">
+            <a href="mailto:barberpi@utttn.mx" class="list-item-2"
+              >barberpi@utttn.mx</a
+            >
+          </li>
+        </ul>
+      </nav>
+      <nav class="text-link-list" aria-labelledby="footer-location">
+        <div class="text-strong-wrapper">
+          <h2 id="footer-location" class="text-strong">
+            <span class="text-strong-2">ubicación</span>
+          </h2>
+        </div>
+        <ul class="footer-list">
+          <li class="text-link-list-item">
+            <a
+              href="https://maps.app.goo.gl/ZD5gur5vPiwKMVCW9?g_st=iw"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="list-item-7"
+              >google.maps/micasa</a
+            >
+          </li>
+        </ul>
+      </nav>
+      <nav class="text-link-list" aria-labelledby="footer-creator">
+        <div class="text-strong-wrapper">
+          <h2 id="footer-creator" class="text-strong">
+            <span>Redes sociales:</span>
+          </h2>
+        </div>
+        <ul class="footer-list">
+          <li class="text-link-list-item">
+            <span class="list-item-11">Axel Rivera</span>
+          </li>
+          <li class="text-link-list-item">
+            <span class="list-item-12">contactos:</span>
+          </li>
+          <li class="text-link-list-item">
+            <a href="mailto:axel.delgado@uttn.mx" class="list-item-13"
+              >axel.delgado@uttn.mx</a
+            >
+          </li>
+          <li class="text-link-list-item">
+            <a href="tel:8994287620" class="list-item">8994287620</a>
+          </li>
+        </ul>
+      </nav>
+    </footer>
+
+    <!-- ═══════════════════ NOTIFICACIONES ═══════════════════ -->
+    <div id="app-notify-root">
+      <div id="app-toast-container" class="toast-container"></div>
+      <div id="app-modal-container"></div>
+    </div>
+
+    <!-- ═══════════════════ SCRIPT ═══════════════════ -->
+    <script>
+      /* ─── Toast / Confirm helpers ─── */
+      (function notifyHelpers() {
+        const toastContainer = document.getElementById("app-toast-container");
+        const modalContainer = document.getElementById("app-modal-container");
+
+        window.showToast = function (text = "", type = "info", timeout = 3500) {
+          return new Promise((resolve) => {
+            if (!toastContainer) return resolve();
+            const wrap = document.createElement("div");
+            wrap.className = `app-toast ${type}`;
+            wrap.innerHTML = `<div class="msg">${text}</div><button class="close-btn" aria-label="close">×</button>`;
+            const closeBtn = wrap.querySelector(".close-btn");
+            let removed = false;
+            const cleanup = () => {
+              if (removed) return;
+              removed = true;
+              wrap.style.opacity = "0";
+              setTimeout(() => {
+                try {
+                  toastContainer.removeChild(wrap);
+                } catch (e) {}
+                resolve();
+              }, 180);
+            };
+            closeBtn.addEventListener("click", cleanup);
+            toastContainer.appendChild(wrap);
+            setTimeout(cleanup, timeout || 3500);
+          });
+        };
+
+        window.showConfirm = function (title = "Confirmar", message = "") {
+          return new Promise((resolve) => {
+            if (!modalContainer) return resolve(false);
+            const backdrop = document.createElement("div");
+            backdrop.className = "app-modal-backdrop";
+            backdrop.innerHTML = `
+              <div class="app-modal" role="dialog" aria-modal="true">
+                <h3>${title}</h3><p>${message}</p>
+                <div class="row">
+                  <button class="app-btn ghost"    id="app-cancel-btn">Cancelar</button>
+                  <button class="app-btn primary"  id="app-ok-btn">Aceptar</button>
+                </div>
+              </div>`;
+            modalContainer.appendChild(backdrop);
+            const cleanup = (v) => {
+              try {
+                modalContainer.removeChild(backdrop);
+              } catch (e) {}
+              resolve(Boolean(v));
+            };
+            backdrop
+              .querySelector("#app-ok-btn")
+              .addEventListener("click", () => cleanup(true));
+            backdrop
+              .querySelector("#app-cancel-btn")
+              .addEventListener("click", () => cleanup(false));
+            backdrop.addEventListener("click", (ev) => {
+              if (ev.target === backdrop) cleanup(false);
+            });
+          });
+        };
+      })();
+
+      /* ─── Config ─── */
+      const API_BASE_URL =
+        window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1"
+          ? "http://localhost:4000"
+          : window.location.origin;
+
+      const API_AUTH = `${API_BASE_URL}/api/auth`;
+      const API_CATALOG = `${API_BASE_URL}/api/catalogo`;
+      const API_MENSAJES = `${API_BASE_URL}/api/mensajes`;
+
+      /* ─── Helpers de sesión ─── */
+      const getToken = () => localStorage.getItem("token");
+      const getRol = () => localStorage.getItem("rol");
+
+      function redirigirSegunRol(rol) {
+        if (rol === "barbero" || rol === "admin")
+          window.location.href = "/homebarber";
+        else window.location.href = "/home";
+      }
+
+      /* ─── Estado global ─── */
+      let catalogImages = [];
+      let currentEditId = null;
+      let itemToDelete = null;
+      let currentUser = null;
+      let currentRol = null;
+      let mensajesBarbero = [];
+      let currentMessageId = null;
+
+      /* ══════════════════════════════════════════════
+         INIT
+      ══════════════════════════════════════════════ */
+      document.addEventListener("DOMContentLoaded", async () => {
+        const token = getToken();
+        const rol = getRol();
+        currentRol = rol;
+
+        if (!token) {
+          await showToast("Debes iniciar sesión", "error", 4000);
+          window.location.href = "/";
+          return;
+        }
+
+        if (rol !== "barbero" && rol !== "admin") {
+          redirigirSegunRol(rol);
+          return;
+        }
+
+        /* Cargar perfil */
+        try {
+          const resp = await fetch(`${API_AUTH}/perfil`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          if (resp.status === 401) {
+            await showToast(
+              "Sesión expirada. Vuelve a iniciar sesión.",
+              "error",
+              4000,
+            );
+            localStorage.removeItem("token");
+            localStorage.removeItem("rol");
+            window.location.href = "/";
+            return;
+          }
+
+          if (resp.ok) {
+            currentUser = await resp.json();
+            const spanNombre = document.getElementById("nombre-usuario");
+            if (spanNombre) spanNombre.textContent = currentUser.nombre || "";
+          }
+        } catch (err) {
+          console.error("Error al obtener perfil", err);
+        }
+
+        setupEventListeners();
+        configureBarberFieldByRole();
+        await loadCatalogFromServer();
+        await loadMensajesBarbero();
+        setupMensajesEvents();
+      });
+
+      /* ══════════════════════════════════════════════
+         MENSAJES
+      ══════════════════════════════════════════════ */
+      async function loadMensajesBarbero() {
+        const container = document.getElementById("messages-container-barber");
+        container.innerHTML = "<p>Cargando mensajes...</p>";
+        try {
+          const resp = await fetch(`${API_MENSAJES}/mis-mensajes`, {
+            headers: { Authorization: `Bearer ${getToken()}` },
+          });
+          if (!resp.ok) {
+            container.innerHTML = "<p>No se pudieron cargar los mensajes.</p>";
+            return;
+          }
+          mensajesBarbero = await resp.json();
+          renderMensajesBarbero();
+        } catch (err) {
+          console.error("Error conexión mensajes:", err);
+          container.innerHTML =
+            "<p>Error de conexión al cargar los mensajes.</p>";
+        }
+      }
+
+      function renderMensajesBarbero() {
+        const container = document.getElementById("messages-container-barber");
+        container.innerHTML = "";
+        if (!mensajesBarbero.length) {
+          container.innerHTML = "<p>Aún no has creado mensajes.</p>";
+          return;
+        }
+        mensajesBarbero.forEach((m) => {
+          const card = document.createElement("div");
+          card.className = "catalog-card";
+          const fecha = m.creado_en
+            ? new Date(m.creado_en).toLocaleDateString("es-ES", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              })
+            : "";
+          card.innerHTML = `
+            <div class="catalog-actions">
+              <button class="action-btn edit-btn"   data-id="${m.id_mensaje}" title="Editar"><i class="fa-solid fa-pen"></i></button>
+              <button class="action-btn delete-btn" data-id="${m.id_mensaje}" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
+            </div>
+            <div class="catalog-info">
+              <p class="catalog-description">${m.mensaje}</p>
+              <p class="catalog-date">Tipo: ${m.tipo}${fecha ? " · " + fecha : ""}${m.activo ? "" : " · (inactivo)"}</p>
+            </div>`;
+          card
+            .querySelector(".edit-btn")
+            .addEventListener("click", () => openMessageModal(m));
+          card
+            .querySelector(".delete-btn")
+            .addEventListener("click", () => toggleMensajeActivo(m));
+          container.appendChild(card);
+        });
+      }
+
+      function setupMensajesEvents() {
+        const modal = document.getElementById("message-modal");
+        const form = document.getElementById("message-form");
+        const closeBtn = document.getElementById("close-message-modal");
+        const cancelBtn = document.getElementById("cancel-message");
+
+        const closeModalMensaje = () => {
+          if (modal) modal.style.display = "none";
+          currentMessageId = null;
+          if (form) form.reset();
+        };
+
+        document
+          .getElementById("add-message-btn")
+          .addEventListener("click", () => openMessageModal(null));
+        if (closeBtn) closeBtn.addEventListener("click", closeModalMensaje);
+        if (cancelBtn) cancelBtn.addEventListener("click", closeModalMensaje);
+
+        if (form) {
+          form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const text = document.getElementById("message-text").value.trim();
+            const tipo = document.getElementById("message-type").value;
+            if (!text) {
+              showToast("El mensaje no puede estar vacío.", "info", 4000);
+              return;
+            }
+
+            const token = getToken();
+            try {
+              const url = currentMessageId
+                ? `${API_MENSAJES}/${currentMessageId}`
+                : API_MENSAJES;
+              const method = currentMessageId ? "PUT" : "POST";
+              const resp = await fetch(url, {
+                method,
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ mensaje: text, tipo }),
+              });
+              const data = await resp.json();
+              if (!resp.ok) {
+                showToast(
+                  data.error || "Error al guardar el mensaje",
+                  "error",
+                  4000,
+                );
+                return;
+              }
+              await loadMensajesBarbero();
+              closeModalMensaje();
+            } catch (err) {
+              console.error("Error guardando mensaje:", err);
+              showToast(
+                "Error de conexión al guardar el mensaje",
+                "error",
+                4000,
+              );
+            }
+          });
+        }
+
+        window.openMessageModal = function (mensaje) {
+          const title = document.getElementById("message-modal-title");
+          const textInput = document.getElementById("message-text");
+          const typeSelect = document.getElementById("message-type");
+          if (mensaje) {
+            currentMessageId = mensaje.id_mensaje;
+            title.textContent = "Editar mensaje";
+            textInput.value = mensaje.mensaje;
+            typeSelect.value = mensaje.tipo || "info";
+          } else {
+            currentMessageId = null;
+            title.textContent = "Nuevo mensaje";
+            textInput.value = "";
+            typeSelect.value = "info";
+          }
+          modal.style.display = "flex";
+        };
+
+        window.toggleMensajeActivo = async function (mensaje) {
+          try {
+            const resp = await fetch(
+              `${API_MENSAJES}/${mensaje.id_mensaje}/activo`,
+              {
+                method: "PATCH",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${getToken()}`,
+                },
+                body: JSON.stringify({ activo: !mensaje.activo }),
+              },
+            );
+            const data = await resp.json();
+            if (!resp.ok) {
+              showToast(
+                data.error || "Error al actualizar el estado",
+                "error",
+                4000,
+              );
+              return;
+            }
+            await loadMensajesBarbero();
+          } catch (err) {
+            console.error("Error cambiando estado mensaje:", err);
+            showToast(
+              "Error de conexión al actualizar el mensaje",
+              "error",
+              4000,
+            );
+          }
+        };
+      }
+
+      async function loadCatalogFromServer() {
+        try {
+          const resp = await fetch(`${API_CATALOG}/mis-trabajos`, {
+            headers: { Authorization: `Bearer ${getToken()}` },
+          });
+          if (!resp.ok) {
+            console.error("Error al obtener catálogo");
+            return;
+          }
+
+          const data = await resp.json();
+          catalogImages = data.map((item) => ({
+            id: item.id_foto,
+            name: item.nombre,
+            description: item.descripcion || "",
+            imageUrl: item.imagen_id
+              ? `${API_BASE_URL}/api/imagenes/${item.imagen_id}`
+              : null,
+            date: item.fecha_subida,
+            nombre_barber: item.nombre_barber,
+          }));
+
+          renderCatalog();
+        } catch (err) {
+          console.error("Error de conexión al cargar catálogo", err);
+        }
+      }
+
+      /* ══════════════════════════════════════════════
+         SUBIR NUEVA IMAGEN
+         Usa multer.memoryStorage() → guarda en BD (VARBINARY)
+         El backend expone GET /api/imagenes/:id para servirla
+      ══════════════════════════════════════════════ */
+      async function addNewImage() {
+        const name = document.getElementById("image-name").value.trim();
+        const description = document
+          .getElementById("image-description")
+          .value.trim();
+        const fileInput = document.getElementById("image-file");
+
+        if (!name || !description) {
+          showToast("Por favor, completa todos los campos", "info", 4000);
+          return;
+        }
+        if (!fileInput.files[0]) {
+          showToast("Por favor, selecciona una imagen", "info", 4000);
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append("nombre", name);
+        formData.append("descripcion", description);
+        formData.append("imagen", fileInput.files[0]); // campo "imagen" → multer
+
+        const nombreBarber =
+          currentRol === "barbero"
+            ? currentUser?.nombre || "Barbero sin nombre"
+            : document.getElementById("image-barber")?.value ||
+              "Referencia de internet";
+        formData.append("nombre_barber_ref", nombreBarber);
+
+        try {
+          const resp = await fetch(API_CATALOG, {
+            method: "POST",
+            headers: { Authorization: `Bearer ${getToken()}` },
+            body: formData,
+          });
+
+          if (!resp.ok) {
+            const text = await resp.text();
+            let msg = "Error al subir la imagen";
+            try {
+              msg = JSON.parse(text).error || msg;
+            } catch (_) {}
+            showToast(msg, "error", 4000);
+            return;
+          }
+
+          await loadCatalogFromServer();
+          closeUploadModal();
+          showToast("Trabajo agregado con éxito", "success", 3000);
+        } catch (err) {
+          console.error("Error al subir imagen", err);
+          showToast("Error de conexión al subir la imagen", "error", 4000);
+        }
+      }
+
+      async function updateImage() {
+        const name = document.getElementById("image-name").value.trim();
+        const description = document
+          .getElementById("image-description")
+          .value.trim();
+        const fileInput = document.getElementById("image-file");
+
+        if (!name || !description) {
+          showToast("Por favor, completa todos los campos", "info", 4000);
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append("nombre", name);
+        formData.append("descripcion", description);
+        if (fileInput.files[0]) formData.append("imagen", fileInput.files[0]);
+
+        const nombreBarber =
+          currentRol === "barbero"
+            ? currentUser?.nombre || "Barbero sin nombre"
+            : document.getElementById("image-barber")?.value ||
+              "Referencia de internet";
+        formData.append("nombre_barber_ref", nombreBarber);
+
+        try {
+          const resp = await fetch(`${API_CATALOG}/${currentEditId}`, {
+            method: "PUT",
+            headers: { Authorization: `Bearer ${getToken()}` },
+            body: formData,
+          });
+
+          if (!resp.ok) {
+            const text = await resp.text();
+            let msg = "Error al actualizar la imagen";
+            try {
+              msg = JSON.parse(text).error || msg;
+            } catch (_) {}
+            showToast(msg, "error", 4000);
+            return;
+          }
+
+          await loadCatalogFromServer();
+          closeUploadModal();
+          showToast("Trabajo actualizado con éxito", "success", 3000);
+        } catch (err) {
+          console.error("Error al actualizar imagen", err);
+          showToast("Error de conexión al actualizar la imagen", "error", 4000);
+        }
+      }
+
+      /* ══════════════════════════════════════════════
+         ELIMINAR IMAGEN
+      ══════════════════════════════════════════════ */
+      async function deleteImage() {
+        if (!itemToDelete) return;
+        try {
+          const resp = await fetch(`${API_CATALOG}/${itemToDelete}`, {
+            method: "DELETE",
+            headers: { Authorization: `Bearer ${getToken()}` },
+          });
+
+          let data = {};
+          try {
+            data = await resp.json();
+          } catch (_) {}
+
+          if (!resp.ok) {
+            showToast(
+              data.error || "Error al eliminar el trabajo",
+              "error",
+              4000,
+            );
+            return;
+          }
+
+          catalogImages = catalogImages.filter(
+            (img) => img.id !== itemToDelete,
+          );
+          renderCatalog();
+          closeDeleteModal();
+          showToast("Trabajo eliminado con éxito", "success", 3000);
+        } catch (err) {
+          console.error("Error de conexión al eliminar imagen:", err);
+          showToast("Error de conexión al eliminar el trabajo", "error", 4000);
+        } finally {
+          itemToDelete = null;
+        }
+      }
+
+      /* ══════════════════════════════════════════════
+         RENDER CATÁLOGO
+      ══════════════════════════════════════════════ */
+      function renderCatalog() {
+        const container = document.getElementById("catalog-container");
+        const emptyCatalog = document.getElementById("empty-catalog");
+        container.innerHTML = "";
+
+        if (!catalogImages.length) {
+          if (emptyCatalog) {
+            emptyCatalog.style.display = "block";
+            container.appendChild(emptyCatalog);
+          }
+          return;
+        }
+        if (emptyCatalog) emptyCatalog.style.display = "none";
+        catalogImages.forEach((image) =>
+          container.appendChild(createCatalogCard(image)),
+        );
+      }
+
+      function createCatalogCard(image) {
+        const card = document.createElement("div");
+        card.className = "catalog-card";
+        card.setAttribute("data-id", image.id);
+
+        const date = new Date(image.date);
+        const formattedDate = isNaN(date)
+          ? ""
+          : date.toLocaleDateString("es-ES", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            });
+
+        /* Si no hay imagen, mostramos un placeholder */
+        const imgHtml = image.imageUrl
+          ? `<img src="${image.imageUrl}" alt="${image.name}" class="catalog-image"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+          : "";
+        const placeholderHtml = `
+          <div class="catalog-image" style="display:${image.imageUrl ? "none" : "flex"};
+            align-items:center;justify-content:center;background:var(--surface-2);color:var(--text-muted);font-size:2rem;">
+            <i class="fa-solid fa-scissors"></i>
+          </div>`;
+
+        card.innerHTML = `
+          <div class="catalog-actions">
+            <button class="action-btn edit-btn"   data-id="${image.id}" title="Editar"><i class="fa-solid fa-pen"></i></button>
+            <button class="action-btn delete-btn" data-id="${image.id}" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
+          </div>
+          ${imgHtml}${placeholderHtml}
+          <div class="catalog-info">
+            <h3 class="catalog-name">${image.name}</h3>
+            <p class="catalog-description">${image.description}</p>
+            <p class="catalog-barber">Barbero: ${image.nombre_barber || "—"}</p>
+            <p class="catalog-date">${formattedDate ? "Agregado: " + formattedDate : ""}</p>
+          </div>`;
+
+        card
+          .querySelector(".edit-btn")
+          .addEventListener("click", () => openEditModal(image.id));
+        card
+          .querySelector(".delete-btn")
+          .addEventListener("click", () => openDeleteModal(image.id));
+        return card;
+      }
+
+      /* ══════════════════════════════════════════════
+         MODALES — abrir / cerrar
+      ══════════════════════════════════════════════ */
+      function openAddModal() {
+        document.getElementById("modal-title").textContent =
+          "Agregar Nuevo Trabajo al Catálogo";
+        document.getElementById("submit-button").textContent =
+          "Guardar en Catálogo";
+        document.getElementById("edit-id").value = "";
+        document.getElementById("upload-form").reset();
+        document.getElementById("image-preview").style.display = "none";
+        document.getElementById("image-note").textContent =
+          "Selecciona una imagen para subir";
+        document.getElementById("image-file").required = true;
+        currentEditId = null;
+        configureBarberFieldByRole();
+        document.getElementById("upload-modal").style.display = "flex";
+      }
+
+      function openEditModal(id) {
+        const image = catalogImages.find((img) => img.id === id);
+        if (!image) return;
+
+        document.getElementById("modal-title").textContent =
+          "Editar Trabajo del Catálogo";
+        document.getElementById("submit-button").textContent = "Actualizar";
+        document.getElementById("edit-id").value = image.id;
+        document.getElementById("image-name").value = image.name;
+        document.getElementById("image-description").value = image.description;
+
+        const preview = document.getElementById("image-preview");
+        if (image.imageUrl) {
+          preview.src = image.imageUrl;
+          preview.style.display = "block";
+          document.getElementById("image-note").textContent =
+            "Imagen actual (selecciona una nueva para cambiar)";
+        } else {
+          preview.style.display = "none";
+          document.getElementById("image-note").textContent =
+            "Sin imagen. Selecciona una para agregar.";
+        }
+        document.getElementById("image-file").required = false;
+        currentEditId = id;
+
+        if (currentRol === "admin") {
+          configureBarberFieldByRole();
+          const select = document.getElementById("image-barber");
+          if (select)
+            Array.from(select.options).forEach((opt) => {
+              if (opt.value === image.nombre_barber) opt.selected = true;
+            });
+        }
+
+        document.getElementById("upload-modal").style.display = "flex";
+      }
+
+      function openDeleteModal(id) {
+        const image = catalogImages.find((img) => img.id === id);
+        if (!image) return;
+        document.getElementById("delete-item-name").textContent = image.name;
+        itemToDelete = id;
+        document.getElementById("delete-modal").style.display = "flex";
+      }
+
+      function closeUploadModal() {
+        document.getElementById("upload-modal").style.display = "none";
+        resetUploadForm();
+      }
+
+      function closeDeleteModal() {
+        document.getElementById("delete-modal").style.display = "none";
+        itemToDelete = null;
+      }
+
+      function resetUploadForm() {
+        document.getElementById("upload-form").reset();
+        document.getElementById("image-preview").style.display = "none";
+        document.getElementById("image-note").textContent =
+          "Selecciona una imagen para subir";
+        document.getElementById("image-file").required = true;
+        currentEditId = null;
+      }
+
+      /* ══════════════════════════════════════════════
+         CAMPO BARBERO SEGÚN ROL
+      ══════════════════════════════════════════════ */
+      function configureBarberFieldByRole() {
+        const group = document.getElementById("barber-field-group");
+        const select = document.getElementById("image-barber");
+        if (!group || !select) return;
+        select.innerHTML = "";
+
+        if (currentRol === "barbero") {
+          group.style.display = "none";
+          const opt = document.createElement("option");
+          opt.value = opt.textContent =
+            currentUser?.nombre || "Barbero sin nombre";
+          select.appendChild(opt);
+        } else if (currentRol === "admin") {
+          group.style.display = "block";
+          [
+            ["Titan", "Titan"],
+            ["Referencia de internet", "Referencia de internet"],
+            ["Otro barbero", "Otro barbero"],
+          ].forEach(([v, t]) => {
+            const opt = document.createElement("option");
+            opt.value = v;
+            opt.textContent = t;
+            select.appendChild(opt);
+          });
+        }
+      }
+
+      /* ══════════════════════════════════════════════
+         EVENT LISTENERS GENERALES
+      ══════════════════════════════════════════════ */
+      function setupEventListeners() {
+        document
+          .getElementById("add-image")
+          .addEventListener("click", openAddModal);
+        document
+          .getElementById("close-modal")
+          .addEventListener("click", closeUploadModal);
+        document
+          .getElementById("close-delete-modal")
+          .addEventListener("click", closeDeleteModal);
+        document
+          .getElementById("cancel-upload")
+          .addEventListener("click", closeUploadModal);
+        document
+          .getElementById("cancel-delete")
+          .addEventListener("click", closeDeleteModal);
+        document
+          .getElementById("confirm-delete")
+          .addEventListener("click", deleteImage);
+
+        document
+          .getElementById("image-file")
+          .addEventListener("change", function (e) {
+            if (e.target.files && e.target.files[0]) {
+              const reader = new FileReader();
+              reader.onload = (e2) => {
+                const preview = document.getElementById("image-preview");
+                preview.src = e2.target.result;
+                preview.style.display = "block";
+                document.getElementById("image-note").textContent =
+                  "Imagen seleccionada";
+              };
+              reader.readAsDataURL(e.target.files[0]);
+            }
+          });
+
+        document
+          .getElementById("upload-form")
+          .addEventListener("submit", function (e) {
+            e.preventDefault();
+            currentEditId ? updateImage() : addNewImage();
+          });
+      }
+    </script>
+  </body>
+</html>

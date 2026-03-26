@@ -1,0 +1,617 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Barber Studio - Inicio Cliente</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="alerts.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="block">
+        <img
+          class="imagen-de-barberia"
+          src="../images/titanicon.jpeg"
+          alt="Logo Barber Studio"
+        />
+      </div>
+      <nav class="navigation-pill-list" aria-label="Navegación principal">
+        <a href="/perfil" class="navigation-pill">
+          <span class="title">Mi Perfil</span>
+        </a>
+        <a href="/home" class="navigation-pill">
+          <span class="title">Inicio</span>
+        </a>
+        <a href="/agendar" class="navigation-pill">
+          <span class="title">Agendar Cita</span>
+        </a>
+        <a href="/notificacion" class="navigation-pill">
+          <span class="title">Notificaciones</span>
+        </a>
+        <a href="/" class="navigation-pill" id="logout-link">
+          <span class="title">Cerrar Sesión</span>
+        </a>
+      </nav>
+    </header>
+    <main class="main-content">
+      <section class="messages-section">
+        <h2 class="section-title">Mensajes de tu barbero</h2>
+        <div class="messages-container" id="messages-container">
+          <p>Cargando mensajes...</p>
+        </div>
+      </section>
+
+      <section class="carousel-section">
+        <h2 class="section-title">Trabajos de Ivan Barber</h2>
+        <div class="carousel-container" id="ivan-carousel">
+          <button class="carousel-btn" id="ivan-prev">←</button>
+          <div class="carousel-viewport">
+            <div class="carousel-track" id="ivan-track">
+              <p>Cargando trabajos...</p>
+            </div>
+          </div>
+          <button class="carousel-btn" id="ivan-next">→</button>
+        </div>
+        <div class="carousel-dots" id="ivan-dots"></div>
+      </section>
+
+      <section class="carousel-section">
+        <h2 class="section-title">Referencias de internet</h2>
+        <div class="carousel-container" id="ref-carousel">
+          <button class="carousel-btn" id="ref-prev">←</button>
+          <div class="carousel-viewport">
+            <div class="carousel-track" id="ref-track">
+              <p>Cargando trabajos...</p>
+            </div>
+          </div>
+          <button class="carousel-btn" id="ref-next">→</button>
+        </div>
+        <div class="carousel-dots" id="ref-dots"></div>
+      </section>
+
+      <section class="carousel-section">
+        <h2 class="section-title">Otros barberos</h2>
+        <div class="carousel-container" id="otros-carousel">
+          <button class="carousel-btn" id="otros-prev">←</button>
+          <div class="carousel-viewport">
+            <div class="carousel-track" id="otros-track">
+              <p>Cargando trabajos...</p>
+            </div>
+          </div>
+          <button class="carousel-btn" id="otros-next">→</button>
+        </div>
+        <div class="carousel-dots" id="otros-dots"></div>
+      </section>
+
+      <section class="carousel-section">
+        <h2 class="section-title">Historial de trabajos (últimos 40)</h2>
+        <div class="carousel-container" id="hist-carousel">
+          <button class="carousel-btn" id="hist-prev">←</button>
+          <div class="carousel-viewport">
+            <div class="carousel-track" id="hist-track">
+              <p>Cargando historial...</p>
+            </div>
+          </div>
+          <button class="carousel-btn" id="hist-next">→</button>
+        </div>
+        <div class="carousel-dots" id="hist-dots"></div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-logo">
+        <img
+          class="imagen-de-barberia"
+          src="/images/titanicon.jpeg"
+          alt="Barber Studio Logo"
+        />
+      </div>
+      <nav class="text-link-list" aria-labelledby="footer-contact">
+        <div class="text-strong-wrapper">
+          <h2 id="footer-contact" class="text-strong">
+            <span class="text-strong-2">contacto</span>
+          </h2>
+        </div>
+        <ul class="footer-list">
+          <li class="text-link-list-item">
+            <a href="tel:9837324637" class="list-item">9837324637</a>
+          </li>
+          <li class="text-link-list-item">
+            <a href="mailto:barberpi@utttn.mx" class="list-item-2"
+              >barberpi@utttn.mx</a
+            >
+          </li>
+        </ul>
+      </nav>
+      <nav class="text-link-list" aria-labelledby="footer-location">
+        <div class="text-strong-wrapper">
+          <h2 id="footer-location" class="text-strong">
+            <span class="text-strong-2">ubicación</span>
+          </h2>
+        </div>
+        <ul class="footer-list">
+          <li class="text-link-list-item">
+            <img src="/images/location-pin.svg" alt="location" height="15px" />
+            <a
+              href=""
+              target="_blank"
+              rel="noopener noreferrer"
+              class="list-item-7"
+              >google.maps/micasa</a
+            >
+          </li>
+        </ul>
+      </nav>
+      <nav class="text-link-list" aria-labelledby="footer-creator">
+        <div class="text-strong-wrapper">
+          <h2 id="footer-creator" class="text-strong">
+            <span class="">Redes sociales:</span>
+          </h2>
+        </div>
+        <ul class="footer-list">
+          <li class="text-link-list-item">
+            <img src="/images/facebook.svg" alt="facebook" height="30px" />
+            <a
+              href="http://www.facebook.com/axel.rivera"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="list-item-11"
+              >axel rivera</a
+            >
+          </li>
+          <li class="text-link-list-item">
+            <img
+              src="/images/facebook-svgrepo-com.svg"
+              alt="linkedin"
+              height="30px"
+            />
+            <a
+              href="https://www.linkedin.com/in/axel-delgado-9b4a3225b/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="list-item-12"
+              >axel delgado</a
+            >
+          </li>
+          <li class="text-link-list-item">
+            <a href="mailto:axel.delgado@uttn.mx" class="list-item-13"
+              >axel.delgado@uttn.mx</a
+            >
+          </li>
+          <li class="text-link-list-item">
+            <a href="tel:8994287620" class="list-item">8994287620</a>
+          </li>
+        </ul>
+      </nav>
+    </footer>
+
+    <div id="app-notify-root">
+      <div id="app-toast-container" class="toast-container"></div>
+      <div id="app-modal-container"></div>
+    </div>
+
+    <script>
+      (function notifyHelpers() {
+        const toastContainer = document.getElementById("app-toast-container");
+        const modalContainer = document.getElementById("app-modal-container");
+
+        window.showToast = function (text = "", type = "info", timeout = 3500) {
+          return new Promise((resolve) => {
+            if (!toastContainer) {
+              console.warn("Toast container missing:", text);
+              return resolve();
+            }
+            const wrap = document.createElement("div");
+            wrap.className = `app-toast ${type}`;
+            wrap.innerHTML = `<div class="msg">${text}</div><button class="close-btn" aria-label="close">&times;</button>`;
+            const closeBtn = wrap.querySelector(".close-btn");
+            let removed = false;
+            const cleanup = () => {
+              if (removed) return;
+              removed = true;
+              wrap.style.opacity = "0";
+              setTimeout(() => {
+                try {
+                  toastContainer.removeChild(wrap);
+                } catch (e) {}
+                resolve();
+              }, 180);
+            };
+            closeBtn.addEventListener("click", cleanup);
+            toastContainer.appendChild(wrap);
+            setTimeout(cleanup, timeout || 3500);
+          });
+        };
+
+        window.showConfirm = function (title = "Confirmar", message = "") {
+          return new Promise((resolve) => {
+            if (!modalContainer) {
+              console.warn("Modal container missing:", title, message);
+              return resolve(false);
+            }
+            const backdrop = document.createElement("div");
+            backdrop.className = "app-modal-backdrop";
+            backdrop.innerHTML = `
+              <div class="app-modal" role="dialog" aria-modal="true">
+                <h3>${title}</h3>
+                <p>${message}</p>
+                <div class="row">
+                  <button class="app-btn ghost" id="app-cancel-btn">Cancelar</button>
+                  <button class="app-btn primary" id="app-ok-btn">Aceptar</button>
+                </div>
+              </div>
+            `;
+            modalContainer.appendChild(backdrop);
+            const ok = backdrop.querySelector("#app-ok-btn");
+            const cancel = backdrop.querySelector("#app-cancel-btn");
+            const cleanup = (value) => {
+              try {
+                modalContainer.removeChild(backdrop);
+              } catch (e) {}
+              resolve(Boolean(value));
+            };
+            cancel.addEventListener("click", () => cleanup(false));
+            ok.addEventListener("click", () => cleanup(true));
+            backdrop.addEventListener("click", (ev) => {
+              if (ev.target === backdrop) cleanup(false);
+            });
+          });
+        };
+      })();
+      const API_BASE_URL =
+        window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1"
+          ? "http://localhost:4000"
+          : window.location.origin;
+
+      const API_AUTH = `${API_BASE_URL}/api/auth`;
+      const API_CATALOG = `${API_BASE_URL}/api/catalogo`;
+      const API_MENSAJES_PUBLIC = `${API_BASE_URL}/api/mensajes/publico`;
+
+      function getToken() {
+        return localStorage.getItem("token");
+      }
+      function getRol() {
+        return localStorage.getItem("rol");
+      }
+
+      function redirigirSegunRol(rol) {
+        switch (rol) {
+          case "barbero":
+          case "admin":
+            break;
+          case "cliente":
+          default:
+            window.location.href = "/home";
+            break;
+        }
+      }
+
+      const carousels = {
+        ivan: null,
+        ref: null,
+        otros: null,
+        hist: null,
+      };
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        const token = getToken();
+        const rol = getRol();
+
+        if (!token) {
+          await showToast("Debes iniciar sesión", "error", 4000);
+          return;
+        }
+
+        if (rol !== "cliente") {
+          redirigirSegunRol(rol);
+          return;
+        }
+
+        try {
+          const resp = await fetch(`${API_AUTH}/perfil`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          if (resp.status === 401) {
+            await showToast(
+              "Sesión expirada. Vuelve a iniciar sesión.",
+              "error",
+              4000,
+            );
+            localStorage.removeItem("token");
+            localStorage.removeItem("rol");
+            localStorage.removeItem("usuario");
+            window.location.href = "/";
+            return;
+          }
+        } catch (e) {
+          console.error("Error al obtener perfil", e);
+        }
+
+        document
+          .getElementById("logout-link")
+          .addEventListener("click", (e) => {
+            e.preventDefault();
+            localStorage.removeItem("token");
+            localStorage.removeItem("rol");
+            localStorage.removeItem("usuario");
+            window.location.href = "/";
+          });
+
+        await cargarMensajesCliente();
+        await Promise.all([
+          cargarCarruselPorBarbero("ivan", "Ivan Barber", token),
+          cargarCarruselPorBarbero("ref", "Referencia de internet", token),
+          cargarCarruselPorBarbero("otros", "Otro barbero", token),
+          cargarCarruselHistorial("hist", token),
+        ]);
+      });
+
+      async function cargarMensajesCliente() {
+        const token = getToken();
+        const container = document.getElementById("messages-container");
+        container.innerHTML = "<p>Cargando mensajes...</p>";
+
+        try {
+          const resp = await fetch(API_MENSAJES_PUBLIC, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          if (!resp.ok) {
+            const text = await resp.text();
+            console.error("Error mensajes cliente:", resp.status, text);
+            container.innerHTML =
+              "<p>No se pudieron cargar los mensajes en este momento.</p>";
+            return;
+          }
+
+          const mensajes = await resp.json();
+          container.innerHTML = "";
+
+          if (!mensajes.length) {
+            container.innerHTML = "<p>No hay mensajes disponibles.</p>";
+            return;
+          }
+
+          mensajes.forEach((m) => {
+            const card = document.createElement("div");
+            card.className = "catalog-card";
+
+            const fecha = m.creado_en
+              ? new Date(m.creado_en).toLocaleDateString("es-ES", {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                })
+              : "";
+
+            const tipoLabel =
+              m.tipo === "ocupado"
+                ? "Estado: Ocupado"
+                : m.tipo === "trabajando"
+                  ? "Estado: Trabajando"
+                  : "Información";
+
+            card.innerHTML = `
+              <div class="catalog-info">
+                <p class="catalog-description">${m.mensaje}</p>
+                <p class="catalog-date">
+                  ${
+                    m.nombre_barber ? m.nombre_barber + " · " : ""
+                  }${tipoLabel}${fecha ? " · " + fecha : ""}
+                </p>
+              </div>
+            `;
+            container.appendChild(card);
+          });
+        } catch (err) {
+          console.error("Error conexión mensajes cliente:", err);
+          container.innerHTML =
+            "<p>Error de conexión al cargar los mensajes.</p>";
+        }
+      }
+
+      async function cargarCarruselPorBarbero(key, nombreBarber, token) {
+        const track = document.getElementById(`${key}-track`);
+        const dots = document.getElementById(`${key}-dots`);
+
+        track.innerHTML = "<p>Cargando trabajos...</p>";
+        dots.innerHTML = "";
+
+        try {
+          const url = `${API_CATALOG}/por-barber?nombre_barber=${encodeURIComponent(
+            nombreBarber,
+          )}`;
+          const resp = await fetch(url, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          if (!resp.ok) {
+            const text = await resp.text();
+            console.error(`Error carrusel ${key}: status=${resp.status}`, text);
+            track.innerHTML = `<p>No se pudieron cargar los trabajos (${resp.status}).</p>`;
+            return;
+          }
+
+          const data = await resp.json();
+          track.innerHTML = "";
+
+          if (!data.length) {
+            track.innerHTML =
+              "<p>No hay trabajos disponibles para esta categoría.</p>";
+            return;
+          }
+
+          data.forEach((item) => track.appendChild(crearCard(item)));
+
+          initCarousel(key);
+        } catch (err) {
+          console.error(`Error cargando carrusel ${key}:`, err);
+          track.innerHTML =
+            "<p>Error de conexión al cargar los trabajos. Intenta más tarde.</p>";
+        }
+      }
+
+      async function cargarCarruselHistorial(key, token) {
+        const track = document.getElementById(`${key}-track`);
+        const dots = document.getElementById(`${key}-dots`);
+
+        track.innerHTML = "<p>Cargando historial...</p>";
+        dots.innerHTML = "";
+
+        try {
+          const resp = await fetch(`${API_CATALOG}/historial`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          if (!resp.ok) {
+            track.innerHTML = "<p>No se pudo cargar el historial.</p>";
+            return;
+          }
+
+          const data = await resp.json();
+          track.innerHTML = "";
+
+          if (!data.length) {
+            track.innerHTML = "<p>No hay trabajos en el historial.</p>";
+            return;
+          }
+
+          data.forEach((item) => track.appendChild(crearCard(item)));
+
+          initCarousel(key);
+        } catch (err) {
+          console.error("Error cargando historial:", err);
+          track.innerHTML =
+            "<p>Error de conexión al cargar el historial. Intenta más tarde.</p>";
+        }
+      }
+
+      function crearCard(item) {
+        const card = document.createElement("div");
+        card.className = "carousel-card";
+
+        const titulo = item.nombre || "Trabajo";
+        const desc = item.descripcion || "";
+        const barber = item.nombre_barber || "";
+        let fecha = "";
+        if (item.fecha_subida) {
+          const d = new Date(item.fecha_subida);
+          if (!isNaN(d)) {
+            fecha = d.toLocaleDateString("es-ES", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            });
+          }
+        }
+
+        const imageUrl = item.url_imagen.startsWith("http")
+          ? item.url_imagen
+          : `${API_BASE_URL}${item.url_imagen}`;
+
+        card.innerHTML = `
+          <img src="${imageUrl}" alt="${titulo}" class="carousel-image" onerror="this.src='/images/placeholder.jpg'">
+          <div class="carousel-info">
+            <h3 class="carousel-name">${titulo}</h3>
+            <p class="carousel-description">${desc}</p>
+            ${
+              barber || fecha
+                ? `<p class="carousel-description" style="margin-top:0.4rem; font-size:0.85rem; color:#888;">
+                     ${barber ? "Barbero: " + barber : ""}${
+                       barber && fecha ? " · " : ""
+                     }${fecha ? fecha : ""}
+                   </p>`
+                : ""
+            }
+          </div>
+        `;
+
+        return card;
+      }
+
+      function initCarousel(key) {
+        const track = document.getElementById(`${key}-track`);
+        const cards = Array.from(track.querySelectorAll(".carousel-card"));
+        const dotsContainer = document.getElementById(`${key}-dots`);
+
+        if (!cards.length) return;
+
+        const viewport = track.parentElement;
+        const viewportWidth = viewport.clientWidth || 300;
+        const sample = cards[0];
+        const style = getComputedStyle(sample);
+
+        const cardWidth =
+          sample.offsetWidth +
+          parseFloat(style.marginLeft) +
+          parseFloat(style.marginRight);
+
+        const cardsPerSlide = Math.max(
+          1,
+          Math.floor(viewportWidth / cardWidth),
+        );
+        const totalSlides = Math.ceil(cards.length / cardsPerSlide);
+
+        carousels[key] = {
+          currentIndex: 0,
+          totalSlides,
+          cardsPerSlide,
+          cardWidth,
+        };
+
+        dotsContainer.innerHTML = "";
+        for (let i = 0; i < totalSlides; i++) {
+          const dot = document.createElement("button");
+          dot.type = "button";
+          dot.className = "carousel-dot" + (i === 0 ? " active" : "");
+          dot.addEventListener("click", () => moveToSlide(key, i));
+          dotsContainer.appendChild(dot);
+        }
+
+        const prevBtn = document.getElementById(`${key}-prev`);
+        const nextBtn = document.getElementById(`${key}-next`);
+
+        prevBtn.onclick = () => moveCarousel(key, -1);
+        nextBtn.onclick = () => moveCarousel(key, 1);
+
+        moveToSlide(key, 0);
+      }
+
+      function moveCarousel(key, direction) {
+        const c = carousels[key];
+        if (!c) return;
+
+        let next = c.currentIndex + direction;
+        if (next < 0) next = 0;
+        if (next >= c.totalSlides) next = c.totalSlides - 1;
+
+        moveToSlide(key, next);
+      }
+
+      function moveToSlide(key, slideIndex) {
+        const c = carousels[key];
+        if (!c) return;
+
+        const track = document.getElementById(`${key}-track`);
+        const dots = Array.from(
+          document.querySelectorAll(`#${key}-dots .carousel-dot`),
+        );
+
+        c.currentIndex = slideIndex;
+
+        const offset = -slideIndex * c.cardsPerSlide * c.cardWidth;
+        track.style.transform = `translateX(${offset}px)`;
+
+        dots.forEach((d, i) => d.classList.toggle("active", i === slideIndex));
+
+        const prevBtn = document.getElementById(`${key}-prev`);
+        const nextBtn = document.getElementById(`${key}-next`);
+
+        prevBtn.disabled = slideIndex === 0;
+        nextBtn.disabled = slideIndex === c.totalSlides - 1;
+      }
+    </script>
+  </body>
+</html>

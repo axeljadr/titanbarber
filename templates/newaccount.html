@@ -1,0 +1,228 @@
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crear Cuenta - BarberPi</title>
+    <link rel="stylesheet" href="../static/newaccount.css" />
+    <link rel="stylesheet" href="../static/alerts.css" />
+  </head>
+  <body>
+    <!-- Notification root required por notifyHelpers -->
+    <div id="app-notify-root">
+      <div id="app-toast-container" class="toast-container"></div>
+      <div id="app-modal-container"></div>
+    </div>
+
+    <div class="container">
+      <h1>The Titan</h1>
+      <div class="brand-tagline">Barbershop</div>
+      <h2>Crear Nueva Cuenta</h2>
+
+      <form id="formRegistro">
+        <input
+          type="text"
+          name="nombre"
+          placeholder="Nombre completo"
+          required
+        />
+        <input type="email" name="email" placeholder="Email" required />
+        <input
+          type="password"
+          name="contraseña"
+          id="input-password"
+          placeholder="Contraseña"
+          required
+        />
+        <input
+          type="password"
+          name="confirmar"
+          id="input-confirmar"
+          placeholder="Confirmar contraseña"
+          required
+        />
+        <p id="pass-match-hint" style="display:none;font-size:.8rem;margin-top:-.4rem;"></p>
+        <button type="submit">Crear cuenta</button>
+      </form>
+
+      <!-- Panel de éxito: correo enviado -->
+      <div id="panel-correo" style="display:none;width:100%;margin-top:.5rem;">
+        <div style="background:rgba(76,175,125,.08);border:1px solid rgba(76,175,125,.35);border-radius:12px;padding:1.5rem 1.2rem;text-align:center;display:flex;flex-direction:column;align-items:center;gap:.8rem;">
+          <div style="font-size:2.2rem;">📧</div>
+          <p style="color:#4caf7d;font-weight:600;font-size:1rem;margin:0;">¡Revisa tu correo!</p>
+          <p id="panel-correo-email" style="color:rgba(232,213,160,.7);font-size:.88rem;margin:0;"></p>
+          <p style="color:rgba(232,213,160,.5);font-size:.8rem;margin:0;">Haz clic en el botón del correo para confirmar tu cuenta. Si no lo ves, revisa la carpeta de spam.</p>
+        </div>
+      </div>
+
+      <div class="link">
+        <p>¿Ya tienes cuenta? <a href="/">Inicia sesión aquí</a></p>
+      </div>
+    </div>
+
+    <script>
+      (function notifyHelpers() {
+        const toastContainer = document.getElementById("app-toast-container");
+        const modalContainer = document.getElementById("app-modal-container");
+
+        window.showToast = function (text = "", type = "info", timeout = 3500) {
+          return new Promise((resolve) => {
+            if (!toastContainer) {
+              console.warn("Toast container missing:", text);
+              return resolve();
+            }
+            const wrap = document.createElement("div");
+            wrap.className = `app-toast ${type}`;
+            wrap.innerHTML = `<div class="msg">${text}</div><button class="close-btn" aria-label="close">&times;</button>`;
+            const closeBtn = wrap.querySelector(".close-btn");
+            let removed = false;
+            const cleanup = () => {
+              if (removed) return;
+              removed = true;
+              wrap.style.opacity = "0";
+              setTimeout(() => {
+                try {
+                  toastContainer.removeChild(wrap);
+                } catch (e) {}
+                resolve();
+              }, 180);
+            };
+            closeBtn.addEventListener("click", cleanup);
+            toastContainer.appendChild(wrap);
+            setTimeout(cleanup, timeout || 3500);
+          });
+        };
+
+        window.showConfirm = function (title = "Confirmar", message = "") {
+          return new Promise((resolve) => {
+            if (!modalContainer) {
+              console.warn("Modal container missing:", title, message);
+              return resolve(false);
+            }
+            const backdrop = document.createElement("div");
+            backdrop.className = "app-modal-backdrop";
+            backdrop.innerHTML = `
+              <div class="app-modal" role="dialog" aria-modal="true">
+                <h3>${title}</h3>
+                <p>${message}</p>
+                <div class="row">
+                  <button class="app-btn ghost" id="app-cancel-btn">Cancelar</button>
+                  <button class="app-btn primary" id="app-ok-btn">Aceptar</button>
+                </div>
+              </div>
+            `;
+            modalContainer.appendChild(backdrop);
+            const ok = backdrop.querySelector("#app-ok-btn");
+            const cancel = backdrop.querySelector("#app-cancel-btn");
+            const cleanup = (value) => {
+              try {
+                modalContainer.removeChild(backdrop);
+              } catch (e) {}
+              resolve(Boolean(value));
+            };
+            cancel.addEventListener("click", () => cleanup(false));
+            ok.addEventListener("click", () => cleanup(true));
+            backdrop.addEventListener("click", (ev) => {
+              if (ev.target === backdrop) cleanup(false);
+            });
+          });
+        };
+      })();
+    </script>
+
+    <script>
+      const API_BASE = (function () {
+        const host = window.location.hostname;
+        if (host.includes("localhost") || host === "127.0.0.1") {
+          return "http://localhost:4000/api";
+        }
+        return `${window.location.origin}/api`;
+      })();
+
+      const form = document.getElementById("formRegistro");
+      const inputPass = document.getElementById("input-password");
+      const inputConfirmar = document.getElementById("input-confirmar");
+      const passHint = document.getElementById("pass-match-hint");
+
+      // Validación en tiempo real: mostrar hint de coincidencia
+      function checkPassMatch() {
+        const p1 = inputPass.value;
+        const p2 = inputConfirmar.value;
+        if (!p2) { passHint.style.display = "none"; return; }
+        if (p1 === p2) {
+          passHint.textContent = "✔ Las contraseñas coinciden";
+          passHint.style.color = "#4caf7d";
+          passHint.style.display = "block";
+          inputConfirmar.style.borderColor = "#4caf7d";
+        } else {
+          passHint.textContent = "✖ Las contraseñas no coinciden";
+          passHint.style.color = "#e05c5c";
+          passHint.style.display = "block";
+          inputConfirmar.style.borderColor = "#e05c5c";
+        }
+      }
+      inputPass.addEventListener("input", checkPassMatch);
+      inputConfirmar.addEventListener("input", checkPassMatch);
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const nombre = form.nombre.value.trim();
+        const email = form.email.value.trim();
+        const contraseña = inputPass.value.trim();
+        const confirmar = inputConfirmar.value.trim();
+
+        if (!nombre || !email || !contraseña || !confirmar) {
+          await showToast("Por favor completa todos los campos.", "error", 3000);
+          return;
+        }
+
+        if (contraseña.length < 8) {
+          await showToast("La contraseña debe tener al menos 8 caracteres.", "error", 3000);
+          return;
+        }
+
+        if (contraseña !== confirmar) {
+          await showToast("Las contraseñas no coinciden.", "error", 3000);
+          inputConfirmar.focus();
+          return;
+        }
+
+        const submitBtn = form.querySelector("button[type='submit']");
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Enviando...";
+
+        try {
+          const response = await fetch(`${API_BASE}/auth/registro`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ nombre, email, contraseña }),
+          });
+
+          let data = {};
+          try { data = await response.json(); } catch (err) { data = {}; }
+
+          if (response.ok) {
+            // Ocultar formulario y mostrar panel de correo enviado
+            form.style.display = "none";
+            const panel = document.getElementById("panel-correo");
+            const panelEmail = document.getElementById("panel-correo-email");
+            panelEmail.textContent = `Se envió un correo de confirmación a: ${email}`;
+            panel.style.display = "block";
+          } else {
+            await showToast(
+              data.error || data.message || `Error: ${response.status}`,
+              "error",
+              3500,
+            );
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Crear cuenta";
+          }
+        } catch (err) {
+          console.error("Error:", err);
+          await showToast("Error de conexión con el servidor", "error", 3000);
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Crear cuenta";
+        }
+      });
+    </script>
+  </body>
+</html>

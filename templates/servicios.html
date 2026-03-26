@@ -1,0 +1,981 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <title>Servicios – The Titan Barbershop</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --bg: #0d0b0e;
+        --surface: #16121c;
+        --surface-2: #1e1828;
+        --border: rgba(184, 134, 11, 0.22);
+        --border-hover: rgba(184, 134, 11, 0.5);
+        --gold: #000000;
+        --gold-light: #ffffff;
+        --text: #ffffff;
+        --text-muted: rgba(255, 255, 255, 0.885);
+        --text-soft: rgba(255, 255, 255, 0.736);
+        --error: #c0392b;
+        --radius: 12px;
+      }
+
+      /* ── Reset ── */
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      /* ── Body ── */
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--bg);
+        background-image:
+          radial-gradient(
+            ellipse at top left,
+            rgba(90, 50, 140, 0.2) 0%,
+            transparent 55%
+          ),
+          radial-gradient(
+            ellipse at top right,
+            rgba(160, 110, 20, 0.18) 0%,
+            transparent 55%
+          );
+        color: var(--text);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* ══════════════════════════════
+   HEADER
+══════════════════════════════ */
+      .header {
+        background-color: var(--surface);
+        border-bottom: 1px solid var(--border);
+        color: var(--text);
+        padding: 1rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+
+      .imagen-de-barberia {
+        width: 80px;
+        height: 80px;
+        border-radius: 20px;
+        object-fit: cover;
+        border: 2px solid var(--border);
+      }
+
+      .navigation-pill-list {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .navigation-pill {
+        align-items: center;
+        color: var(--text);
+        text-decoration: none;
+        padding: 0.4rem 0.9rem;
+        border-radius: 9px;
+        background-color: rgb(0, 0, 0);
+        border: 1px solid rgba(184, 134, 11, 0.3);
+        font-size: 20px;
+        transition:
+          background-color 0.5s,
+          color 0.5s,
+          border-color 0.5s,
+          transform 0.5s;
+      }
+
+      .navigation-pill:hover {
+        background-color: white;
+        color: black;
+        border-color: black;
+        transform: translateY(-3px);
+      }
+      /* ── MAIN ── */
+      .main {
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+
+      .page-title {
+        font-family: "Playfair Display", serif;
+        font-size: 1.6rem;
+        letter-spacing: 1px;
+        color: #ffffff;
+        margin-bottom: 0.3rem;
+      }
+      .page-subtitle {
+        color: #c1c1c1;
+        font-size: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      /* ── CARD ── */
+      .card {
+        background: var(--surface);
+        border: 1px solid rgba(184, 134, 11, 0.18);
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+      }
+      .card-header {
+        background: var(--surface-2);
+        border-bottom: 1px solid rgba(184, 134, 11, 0.18);
+        padding: 1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+      .card-header h2 {
+        font-family: "Playfair Display", serif;
+        font-size: 1.05rem;
+        color: #c8c8c8;
+        letter-spacing: 1px;
+      }
+      .card-body {
+        padding: 1.5rem;
+      }
+
+      /* ── FORM NUEVO SERVICIO ── */
+      .form-row {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        align-items: flex-end;
+      }
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        flex: 1;
+        min-width: 180px;
+      }
+      .form-group label {
+        font-size: 0.78rem;
+        color: #888;
+        font-weight: 500;
+      }
+      .form-group input {
+        background: #16121c;
+        color: #fff;
+        border: 1px solid rgba(184, 134, 11, 0.3);
+        border-radius: 8px;
+        padding: 0.6rem 0.9rem;
+        font-size: 0.9rem;
+        font-family: "Inter", sans-serif;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+      .form-group input:focus {
+        border-color: #b8860b;
+      }
+      .form-group input.error {
+        border-color: #ef4444;
+      }
+
+      /* ── TABLA ── */
+      .table-wrap {
+        overflow-x: auto;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+      }
+      thead tr {
+        background: var(--surface-2);
+        border-bottom: 1px solid rgba(184, 134, 11, 0.25);
+      }
+      thead th {
+        padding: 0.75rem 1rem;
+        text-align: left;
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      tbody tr {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        transition: background 0.5s;
+      }
+      tbody tr:hover {
+        background: rgba(184, 134, 11, 0.04);
+      }
+      tbody td {
+        padding: 0.75rem 1rem;
+        color: #ddd;
+        vertical-align: middle;
+      }
+
+      /* inline edit inputs */
+      .inline-input {
+        background: #16121c;
+        color: #fff;
+        border: 1px solid rgba(184, 134, 11, 0.3);
+        border-radius: 6px;
+        padding: 0.4rem 0.7rem;
+        font-size: 0.88rem;
+        font-family: "Inter", sans-serif;
+        outline: none;
+        width: 100%;
+        transition: border-color 0.2s;
+      }
+      .inline-input:focus {
+        border-color: #b8860b;
+      }
+
+      .precio-cell {
+        font-weight: 600;
+        color: #e0c97a;
+      }
+
+      /* ── BOTONES ── */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.55rem 1.2rem;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        transition: all 0.2s;
+        font-family: "Inter", sans-serif;
+        white-space: nowrap;
+      }
+      .btn-gold {
+        background: #b8860b;
+        color: #000;
+      }
+      .btn-gold:hover {
+        background: #d4a017;
+      }
+      .btn-outline {
+        background: rgba(184, 134, 11, 0.1);
+        color: #b8860b;
+        border: 1px solid rgba(184, 134, 11, 0.4);
+      }
+      .btn-outline:hover {
+        background: rgba(184, 134, 11, 0.2);
+      }
+      .btn-danger {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+      }
+      .btn-danger:hover {
+        background: rgba(239, 68, 68, 0.2);
+      }
+      .btn-sm {
+        padding: 0.35rem 0.8rem;
+        font-size: 0.8rem;
+      }
+      .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      /* ── BADGE PRECIO ── */
+      .badge-precio {
+        display: inline-block;
+        background: rgba(184, 134, 11, 0.12);
+        color: #e0c97a;
+        border: 1px solid rgba(184, 134, 11, 0.3);
+        border-radius: 6px;
+        padding: 0.2rem 0.6rem;
+        font-weight: 600;
+        font-size: 0.88rem;
+      }
+
+      /* ── EMPTY STATE ── */
+      .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: #555;
+      }
+      .empty-state i {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        display: block;
+        color: #333;
+      }
+
+      /* ── SPINNER ── */
+      .spinner {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(184, 134, 11, 0.3);
+        border-top-color: #b8860b;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* ── TOAST ── */
+      .toast {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        z-index: 9999;
+        padding: 0.75rem 1.25rem;
+        border-radius: 8px;
+        font-size: 0.88rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        animation: slideIn 0.3s ease;
+      }
+      .toast.ok {
+        background: #1a3a1a;
+        color: #86efac;
+        border: 1px solid #22c55e;
+      }
+      .toast.err {
+        background: #7f1d1d;
+        color: #fca5a5;
+        border: 1px solid #ef4444;
+      }
+      @keyframes slideIn {
+        from {
+          transform: translateY(20px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      /* ── MODAL CONFIRMAR ELIMINAR ── */
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 500;
+        align-items: center;
+        justify-content: center;
+      }
+      .modal-overlay.open {
+        display: flex;
+      }
+      .modal {
+        background: #16121c;
+        border: 1px solid rgba(184, 134, 11, 0.3);
+        border-radius: 14px;
+        padding: 2rem;
+        max-width: 380px;
+        width: 90%;
+        text-align: center;
+      }
+      .modal i {
+        font-size: 2.2rem;
+        color: #ef4444;
+        margin-bottom: 1rem;
+        display: block;
+      }
+      .modal h3 {
+        font-family: "Playfair Display", serif;
+        color: #e0c97a;
+        margin-bottom: 0.5rem;
+      }
+      .modal p {
+        color: #888;
+        font-size: 0.88rem;
+        margin-bottom: 1.5rem;
+      }
+      .modal-btns {
+        display: flex;
+        gap: 0.75rem;
+        justify-content: center;
+      }
+
+      /* ── FOOTER ── */
+      .footer {
+        margin-top: 3rem;
+        padding: 1.5rem 2rem;
+        border-top: 1px solid rgba(184, 134, 11, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+        color: #555;
+        font-size: 0.82rem;
+      }
+      .footer span {
+        color: #b8860b;
+        font-family: "Playfair Display", serif;
+        font-size: 0.95rem;
+      }
+      @media (max-width: 768px) {
+        .header {
+          padding: 0.85rem 1rem;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 0.75rem;
+        }
+
+        /* Fila superior: logo + nombre del sitio */
+        .header .block {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+        }
+
+        .imagen-de-barberia {
+          width: 48px;
+          height: 48px;
+          border-radius: 12px;
+          flex-shrink: 0;
+        }
+
+        /* Nav: grid de 3 columnas, pills apilados en vertical */
+        .navigation-pill-list {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 6px;
+          width: 100%;
+        }
+
+        .navigation-pill {
+          font-size: 13px;
+          padding: 0.5rem 0.4rem;
+          text-align: center;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          border-radius: 8px;
+          justify-content: center;
+          display: flex;
+          align-items: center;
+        }
+
+        .footer {
+          flex-direction: column;
+          gap: 1.5rem;
+        }
+        .main-content {
+          padding: 1.5rem 1rem 2.5rem;
+        }
+
+        .notifications-header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .notification-tabs {
+          flex-wrap: wrap;
+        }
+
+        .notification-tab {
+          flex: 1;
+          text-align: center;
+          min-width: 120px;
+        }
+
+        .notification-meta {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .notification-actions {
+          width: 100%;
+          justify-content: flex-start;
+          margin-top: 0.5rem;
+        }
+      }
+
+      @media (max-width: 500px) {
+        .navigation-pill {
+          padding: 0.3rem 0.7rem;
+          font-size: 0.8rem;
+        }
+      }
+      @media (max-width: 400px) {
+        .navigation-pill-list {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .navigation-pill {
+          font-size: 12px;
+          padding: 0.45rem 0.3rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="block">
+        <img
+          class="imagen-de-barberia"
+          src="/images/titanicon.jpeg"
+          alt="Logo Titan Barbershop"
+        />
+      </div>
+      <nav class="navigation-pill-list" aria-label="Navegación principal">
+        <a href="/perfil" class="navigation-pill">
+          <span>Mi Perfil</span>
+        </a>
+        <a href="/homebarber" class="navigation-pill">
+          <span>Inicio</span>
+        </a>
+        <a href="/barber_agenda" class="navigation-pill">
+          <span>Agenda</span>
+        </a>
+        <a href="/notibarbero" class="navigation-pill">
+          <span>Notificaciones</span>
+        </a>
+        <a href="/panel" class="navigation-pill">
+          <span>Panel de Control</span>
+        </a>
+        <a href="/" class="navigation-pill">
+          <span>Cerrar Sesión</span>
+        </a>
+      </nav>
+    </header>
+
+    <!-- MAIN -->
+    <main class="main">
+      <h1 class="page-title">Gestión de Servicios</h1>
+      <p class="page-subtitle">
+        Administra los servicios disponibles en la barbería.
+      </p>
+
+      <!-- Agregar nuevo servicio -->
+      <div class="card">
+        <div class="card-header">
+          <h2>Nuevo Servicio</h2>
+        </div>
+        <div class="card-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="input-nombre"
+                ><i
+                  class="fa-solid fa-tag"
+                  style="color: #b8860b; margin-right: 0.3rem"
+                ></i
+                >Nombre del servicio</label
+              >
+              <input
+                type="text"
+                id="input-nombre"
+                placeholder="Ej: Corte Clásico"
+                maxlength="100"
+              />
+            </div>
+            <div class="form-group" style="max-width: 180px">
+              <label for="input-precio"
+                ><i
+                  class="fa-solid fa-dollar-sign"
+                  style="color: #b8860b; margin-right: 0.3rem"
+                ></i
+                >Precio</label
+              >
+              <input
+                type="number"
+                id="input-precio"
+                placeholder="0.00"
+                min="0"
+                step="0.50"
+              />
+            </div>
+            <button
+              class="btn btn-gold"
+              id="btn-agregar"
+              onclick="agregarServicio()"
+              style="margin-bottom: 1px"
+            >
+              <i class="fa-solid fa-plus"></i> Agregar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lista de servicios -->
+      <div class="card">
+        <div class="card-header">
+          <h2>Servicios Registrados</h2>
+          <span
+            id="contador-servicios"
+            style="color: #888; font-size: 0.82rem"
+          ></span>
+        </div>
+        <div class="card-body" style="padding: 0">
+          <div
+            id="loading-servicios"
+            style="padding: 2rem; text-align: center; color: #888"
+          >
+            <span class="spinner"></span> Cargando servicios...
+          </div>
+          <div class="table-wrap" id="tabla-wrap" style="display: none">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 50px">#</th>
+                  <th>Nombre</th>
+                  <th style="width: 160px">Precio</th>
+                  <th style="width: 160px; text-align: center">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-servicios"></tbody>
+            </table>
+          </div>
+          <div id="empty-servicios" class="empty-state" style="display: none">
+            <i class="fa-solid fa-scissors"></i>
+            <p>No hay servicios registrados aún.</p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <span>The Titan Barbershop</span>
+      <p>Panel de Administración · Servicios</p>
+    </footer>
+
+    <!-- MODAL ELIMINAR -->
+    <div class="modal-overlay" id="modal-eliminar">
+      <div class="modal">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <h3>¿Eliminar servicio?</h3>
+        <p id="modal-msg">Esta acción no se puede deshacer.</p>
+        <div class="modal-btns">
+          <button class="btn btn-outline" onclick="cerrarModal()">
+            Cancelar
+          </button>
+          <button class="btn btn-danger" id="btn-confirmar-eliminar">
+            Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const API_BASE =
+        window.location.hostname === "localhost"
+          ? "http://localhost:4000/api"
+          : "/api";
+
+      function getToken() {
+        return localStorage.getItem("token");
+      }
+
+      let servicios = [];
+      let editando = {};
+      let idEliminar = null;
+
+      // ── Cargar servicios ──
+      async function cargarServicios() {
+        document.getElementById("loading-servicios").style.display = "block";
+        document.getElementById("tabla-wrap").style.display = "none";
+        document.getElementById("empty-servicios").style.display = "none";
+
+        try {
+          const resp = await fetch(`${API_BASE}/admin/servicios`, {
+            headers: { Authorization: `Bearer ${getToken()}` },
+          });
+          if (!resp.ok) throw new Error();
+          servicios = await resp.json();
+          renderTabla();
+        } catch {
+          mostrarToast("Error al cargar servicios", true);
+        } finally {
+          document.getElementById("loading-servicios").style.display = "none";
+        }
+      }
+
+      // ── Render tabla ──
+      function renderTabla() {
+        const tbody = document.getElementById("tbody-servicios");
+        tbody.innerHTML = "";
+
+        document.getElementById("contador-servicios").textContent =
+          `${servicios.length} servicio${servicios.length !== 1 ? "s" : ""}`;
+
+        if (!servicios.length) {
+          document.getElementById("empty-servicios").style.display = "block";
+          document.getElementById("tabla-wrap").style.display = "none";
+          return;
+        }
+
+        document.getElementById("tabla-wrap").style.display = "block";
+        document.getElementById("empty-servicios").style.display = "none";
+
+        servicios.forEach((s, i) => {
+          const enEdicion = editando[s.id_servicio];
+          tbody.innerHTML += `
+          <tr id="row-${s.id_servicio}">
+            <td style="color:#555;">${i + 1}</td>
+            <td>
+              ${
+                enEdicion
+                  ? `<input class="inline-input" id="edit-nombre-${s.id_servicio}"
+                     value="${enEdicion.nombre}" maxlength="100" />`
+                  : `<span style="font-weight:500;">${s.nombre}</span>`
+              }
+            </td>
+            <td>
+              ${
+                enEdicion
+                  ? `<input class="inline-input" id="edit-precio-${s.id_servicio}"
+                     type="number" value="${enEdicion.precio}" min="0" step="0.50"
+                     style="max-width:110px;" />`
+                  : `<span class="badge-precio">$${parseFloat(s.precio).toFixed(2)}</span>`
+              }
+            </td>
+            <td style="text-align:center;">
+              <div style="display:flex;gap:.5rem;justify-content:center;">
+                ${
+                  enEdicion
+                    ? `<button class="btn btn-gold btn-sm" onclick="guardarEdicion(${s.id_servicio})">
+                       <i class="fa-solid fa-check"></i> Guardar
+                     </button>
+                     <button class="btn btn-outline btn-sm" onclick="cancelarEdicion(${s.id_servicio})">
+                       <i class="fa-solid fa-xmark"></i>
+                     </button>`
+                    : `<button class="btn btn-outline btn-sm" onclick="iniciarEdicion(${s.id_servicio})">
+                       <i class="fa-solid fa-pen"></i> Editar
+                     </button>
+                     <button class="btn btn-danger btn-sm" onclick="confirmarEliminar(${s.id_servicio}, '${s.nombre.replace(/'/g, "\\'")}')">
+                       <i class="fa-solid fa-trash"></i>
+                     </button>`
+                }
+              </div>
+            </td>
+          </tr>
+        `;
+        });
+      }
+
+      // ── Agregar servicio ──
+      async function agregarServicio() {
+        const nombre = document.getElementById("input-nombre").value.trim();
+        const precio = parseFloat(
+          document.getElementById("input-precio").value,
+        );
+
+        if (!nombre) {
+          document.getElementById("input-nombre").classList.add("error");
+          mostrarToast("Ingresa el nombre del servicio", true);
+          return;
+        }
+        if (isNaN(precio) || precio < 0) {
+          document.getElementById("input-precio").classList.add("error");
+          mostrarToast("Ingresa un precio válido", true);
+          return;
+        }
+
+        document.getElementById("input-nombre").classList.remove("error");
+        document.getElementById("input-precio").classList.remove("error");
+
+        const btn = document.getElementById("btn-agregar");
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner"></span>';
+
+        try {
+          const resp = await fetch(`${API_BASE}/admin/servicios`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${getToken()}`,
+            },
+            body: JSON.stringify({ nombre, precio }),
+          });
+
+          if (resp.ok) {
+            document.getElementById("input-nombre").value = "";
+            document.getElementById("input-precio").value = "";
+            mostrarToast("Servicio agregado");
+            await cargarServicios();
+          } else {
+            const d = await resp.json().catch(() => ({}));
+            mostrarToast(d.error || "Error al agregar", true);
+          }
+        } catch {
+          mostrarToast("Error de conexión", true);
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fa-solid fa-plus"></i> Agregar';
+        }
+      }
+
+      // ── Edición inline ──
+      function iniciarEdicion(id) {
+        const s = servicios.find((x) => x.id_servicio === id);
+        editando[id] = { nombre: s.nombre, precio: s.precio };
+        renderTabla();
+        document.getElementById(`edit-nombre-${id}`)?.focus();
+      }
+
+      function cancelarEdicion(id) {
+        delete editando[id];
+        renderTabla();
+      }
+
+      async function guardarEdicion(id) {
+        const nombre = document
+          .getElementById(`edit-nombre-${id}`)
+          .value.trim();
+        const precio = parseFloat(
+          document.getElementById(`edit-precio-${id}`).value,
+        );
+
+        if (!nombre || isNaN(precio) || precio < 0) {
+          mostrarToast("Datos inválidos", true);
+          return;
+        }
+
+        try {
+          const resp = await fetch(`${API_BASE}/admin/servicios/${id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${getToken()}`,
+            },
+            body: JSON.stringify({ nombre, precio }),
+          });
+
+          if (resp.ok) {
+            delete editando[id];
+            mostrarToast("Servicio actualizado");
+            await cargarServicios();
+          } else {
+            const d = await resp.json().catch(() => ({}));
+            mostrarToast(d.error || "Error al actualizar", true);
+          }
+        } catch {
+          mostrarToast("Error de conexión", true);
+        }
+      }
+
+      // ── Eliminar ──
+      function confirmarEliminar(id, nombre) {
+        idEliminar = id;
+        document.getElementById("modal-msg").textContent =
+          `¿Seguro que deseas eliminar "${nombre}"? Esta acción no se puede deshacer.`;
+        document.getElementById("modal-eliminar").classList.add("open");
+        document.getElementById("btn-confirmar-eliminar").onclick =
+          eliminarServicio;
+      }
+
+      function cerrarModal() {
+        document.getElementById("modal-eliminar").classList.remove("open");
+        idEliminar = null;
+      }
+
+      async function eliminarServicio() {
+        cerrarModal();
+        try {
+          const resp = await fetch(
+            `${API_BASE}/admin/servicios/${idEliminar}`,
+            {
+              method: "DELETE",
+              headers: { Authorization: `Bearer ${getToken()}` },
+            },
+          );
+          if (resp.ok) {
+            mostrarToast("Servicio eliminado");
+            await cargarServicios();
+          } else {
+            const d = await resp.json().catch(() => ({}));
+            mostrarToast(d.error || "Error al eliminar", true);
+          }
+        } catch {
+          mostrarToast("Error de conexión", true);
+        }
+      }
+
+      // ── Toast ──
+      function mostrarToast(msg, esError = false) {
+        const t = document.createElement("div");
+        t.className = `toast ${esError ? "err" : "ok"}`;
+        t.textContent = msg;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 3500);
+      }
+
+      // ── Init ──
+      document.addEventListener("DOMContentLoaded", () => {
+        const token = getToken();
+        if (!token) {
+          window.location.href = "/";
+          return;
+        }
+        try {
+          const p = JSON.parse(atob(token.split(".")[1]));
+          if (p.rol !== "admin") {
+            window.location.href = "/home";
+            return;
+          }
+        } catch {
+          window.location.href = "/";
+          return;
+        }
+
+        cargarServicios();
+      });
+
+      document.getElementById("logout-link").addEventListener("click", (e) => {
+        e.preventDefault();
+        localStorage.removeItem("token");
+        window.location.href = "/";
+      });
+
+      // Cerrar modal al hacer click fuera
+      document
+        .getElementById("modal-eliminar")
+        .addEventListener("click", function (e) {
+          if (e.target === this) cerrarModal();
+        });
+
+      // Enter para agregar
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && document.activeElement.id === "input-nombre") {
+          document.getElementById("input-precio").focus();
+        } else if (
+          e.key === "Enter" &&
+          document.activeElement.id === "input-precio"
+        ) {
+          agregarServicio();
+        }
+      });
+    </script>
+  </body>
+</html>

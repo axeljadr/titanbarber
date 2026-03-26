@@ -1,0 +1,559 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap");
+
+/* ── Variables ── */
+:root {
+  --bg: #0d0b0e;
+  --surface: #16121c;
+  --surface-2: #1e1828;
+  --border: rgba(184, 134, 11, 0.22);
+  --border-hover: rgba(255, 255, 255, 0.5);
+  --gold: #ffffff;
+  --gold-light: #ffffff;
+  --text: #ffffff;
+  --text-muted: rgba(255, 255, 255, 0.885);
+  --text-soft: rgba(255, 255, 255, 0.55);
+  --radius: 12px;
+}
+
+/* ── Reset ── */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ── Body ── */
+body {
+  font-family: "Inter", sans-serif;
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(
+      ellipse at top left,
+      rgba(90, 50, 140, 0.2) 0%,
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse at top right,
+      rgba(160, 110, 20, 0.18) 0%,
+      transparent 55%
+    );
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ══════════════════════════════
+   HEADER
+══════════════════════════════ */
+.header {
+  background-color: var(--surface);
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.imagen-de-barberia {
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  object-fit: cover;
+  border: 2px solid var(--border);
+}
+
+.navigation-pill-list {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.navigation-pill {
+  align-items: center;
+  color: var(--text);
+  text-decoration: none;
+  padding: 0.4rem 0.9rem;
+  border-radius: 9px;
+  background-color: rgb(0, 0, 0);
+  border: 1px solid rgba(184, 134, 11, 0.3);
+  font-size: 20px;
+  transition:
+    background-color 0.5s,
+    color 0.5s,
+    border-color 0.5s,
+    transform 0.5s;
+}
+
+.navigation-pill:hover {
+  background-color: white;
+  color: black;
+  border-color: black;
+  transform: translateY(-3px);
+}
+
+/* ══════════════════════════════
+   MAIN
+══════════════════════════════ */
+.main-content {
+  flex: 1;
+  padding: 2rem 1rem 3rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.section-title {
+  font-family: "Playfair Display", serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--gold-light);
+  letter-spacing: 0.03em;
+  text-align: left;
+}
+
+/* ══════════════════════════════
+   MENSAJES
+══════════════════════════════ */
+.messages-section {
+  margin-bottom: 2rem;
+}
+
+.messages-container {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.messages-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.message-card + .message-card {
+  margin-top: 1rem;
+  border-top: 1px solid var(--border);
+  padding-top: 0.9rem;
+}
+
+.message-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--text-soft);
+  margin-bottom: 0.25rem;
+}
+
+.message-author {
+  font-weight: 600;
+  color: var(--gold);
+}
+
+.message-title {
+  font-family: "Playfair Display", serif;
+  font-size: 1.05rem;
+  margin-bottom: 0.25rem;
+  color: var(--gold-light);
+}
+
+.message-body {
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.no-messages {
+  font-size: 0.92rem;
+  color: var(--text-soft);
+}
+
+/* ══════════════════════════════
+   CARRUSEL — SECCIÓN / CARTA
+══════════════════════════════ */
+.carousel-section {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+  margin-bottom: 2rem;
+  overflow: hidden;
+  position: relative;
+}
+
+.carousel-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+/* ── Contenedor / viewport ── */
+.carousel-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.carousel-viewport {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+}
+
+/* ── Track ── */
+.carousel-track {
+  display: flex;
+  transition: transform 0.4s ease;
+  will-change: transform;
+  width: max-content;
+}
+
+/* ── Tarjetas ── */
+.carousel-card {
+  flex: 0 0 280px;
+  width: 280px;
+  max-width: 280px;
+  margin-right: 1.5rem;
+  background-color: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.25);
+  transition:
+    border-color 0.2s,
+    transform 0.2s;
+}
+
+.carousel-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-3px);
+}
+
+.carousel-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.carousel-info {
+  padding: 0.75rem 0.9rem 1rem;
+}
+
+.carousel-name {
+  font-family: "Playfair Display", serif;
+  font-size: 1rem;
+  margin-bottom: 0.35rem;
+  color: var(--gold-light);
+}
+
+.carousel-description {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* ── Flechas ── */
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 1px solid var(--border);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--surface);
+  color: var(--gold-light);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+  z-index: 10;
+}
+
+.carousel-arrow:hover {
+  background-color: var(--surface-2);
+  border-color: var(--border-hover);
+}
+
+.carousel-arrow.left {
+  left: 8px;
+}
+.carousel-arrow.right {
+  right: 8px;
+}
+
+.carousel-arrow:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* ── Dots ── */
+.carousel-dots {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.carousel-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  border: none;
+  background-color: rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    width 0.2s;
+}
+
+.carousel-dot.active {
+  background-color: var(--gold);
+  width: 22px;
+}
+
+/* ── Nav central (flechas + dots juntos) ── */
+.carousel-nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+  gap: 0.5rem;
+}
+
+.carousel-btn {
+  background-color: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--gold-light);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+
+.carousel-btn:hover {
+  background-color: var(--surface);
+  border-color: var(--border-hover);
+}
+
+/* ══════════════════════════════
+   FOOTER
+══════════════════════════════ */
+.footer {
+  background-color: var(--surface);
+  border-top: 1px solid var(--border);
+  color: var(--text);
+  padding: 1.8rem 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.8rem;
+  justify-content: space-between;
+}
+
+.footer-logo {
+  flex: 1;
+  min-width: 180px;
+}
+
+.text-link-list {
+  flex: 1;
+  min-width: 180px;
+}
+
+.text-strong-wrapper {
+  margin-bottom: 0.5rem;
+}
+
+.text-strong {
+  font-family: "Playfair Display", serif;
+  font-size: 1.15rem;
+  color: var(--gold-light);
+}
+
+.text-strong-2 {
+  text-transform: lowercase;
+}
+
+.footer-list {
+  list-style: none;
+}
+
+.text-link-list-item {
+  margin-bottom: 0.4rem;
+}
+
+.list-item,
+.list-item-2,
+.list-item-7,
+.list-item-11,
+.list-item-12,
+.list-item-13 {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.88rem;
+  transition: color 0.2s;
+}
+
+.list-item:hover,
+.list-item-2:hover,
+.list-item-7:hover,
+.list-item-13:hover {
+  color: var(--gold-light);
+  text-decoration: underline;
+}
+
+/* ══════════════════════════════
+   RESPONSIVE
+══════════════════════════════ */
+@media (max-width: 900px) {
+  .carousel-card {
+    flex: 0 0 240px;
+    width: 240px;
+    max-width: 240px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 0.85rem 1rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  /* Fila superior: logo + nombre del sitio */
+  .header .block {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .imagen-de-barberia {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    flex-shrink: 0;
+  }
+
+  /* Nav: grid de 3 columnas, pills apilados en vertical */
+  .navigation-pill-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    width: 100%;
+  }
+
+  .navigation-pill {
+    font-size: 13px;
+    padding: 0.5rem 0.4rem;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-radius: 8px;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+  }
+
+  .footer {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .main-content {
+    padding: 1.5rem 1rem 2.5rem;
+  }
+
+  .carousel-card {
+    flex: 0 0 70%;
+    width: 70%;
+    max-width: 70%;
+  }
+
+  .carousel-arrow.left {
+    left: 4px;
+  }
+  .carousel-arrow.right {
+    right: 4px;
+  }
+  .carousel-btn {
+    display: none;
+  }
+
+  .carousel-viewport {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .carousel-viewport::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+  }
+
+  .carousel-track {
+    display: flex;
+    transform: none !important; /* desactiva el transform del JS */
+    width: max-content;
+  }
+
+  .carousel-card {
+    scroll-snap-align: start;
+    flex-shrink: 0;
+  }
+}
+
+@media (max-width: 500px) {
+  .navigation-pill-list {
+    gap: 0.4rem;
+  }
+
+  .navigation-pill {
+    padding: 0.3rem 0.7rem;
+    font-size: 0.8rem;
+  }
+
+  .carousel-card {
+    flex: 0 0 85%;
+    width: 85%;
+    max-width: 85%;
+  }
+
+  .carousel-arrow {
+    width: 30px;
+    height: 30px;
+    font-size: 1rem;
+  }
+}
