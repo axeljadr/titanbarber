@@ -10,8 +10,6 @@ import { fileURLToPath } from "url";
 import dotenv from "dotenv";
 dotenv.config();
 const app = express();
-const PORT = 4000;
-const SECRET = "barberpi_secret_2024";
 
 app.use(
   cors({
@@ -52,18 +50,21 @@ const upload = multer({
   },
 });
 
-const uploadPerfil = multer({ storage: storagePerfil });
+const PORT = process.env.PORT || 4000;
+const SECRET = process.env.SECRET;
+
 const dbConfig = {
-  server: "thetitanbd.database.windows.net",
-  port: 1433,
-  database: "thetitanbd",
-  user: "usuariotitan",
-  password: "Usuario12345",
+  server: process.env.DB_SERVER,
+  port: parseInt(process.env.DB_PORT),
+  database: process.env.DB_NAME,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
   options: {
     encrypt: true,
     trustServerCertificate: false,
   },
 };
+const uploadPerfil = multer({ storage: storagePerfil });
 
 let pool = null;
 
@@ -162,7 +163,13 @@ const transporter = nodemailer.createTransport({
     pass: process.env.MAIL_PASS,
   },
 });
-
+transporter.verify((error, success) => {
+  if (error) {
+    console.error("❌ Error en transporter de correo:", error);
+  } else {
+    console.log("✅ Servidor de correo listo");
+  }
+});
 app.post("/api/auth/registro", async (req, res) => {
   const { nombre, email, contraseña } = req.body;
 
