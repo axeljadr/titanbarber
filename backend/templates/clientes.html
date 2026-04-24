@@ -1,0 +1,1383 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <title>Clientes – The Titan Barbershop</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --bg: #0d0b0e;
+        --surface: #16121c;
+        --surface-2: #1e1828;
+        --border: rgba(184, 134, 11, 0.22);
+        --border-hover: rgba(184, 134, 11, 0.5);
+        --gold: #000000;
+        --gold-light: #ffffff;
+        --text: #ffffff;
+        --text-muted: rgba(255, 255, 255, 0.885);
+        --text-soft: rgba(255, 255, 255, 0.736);
+        --error: #c0392b;
+        --radius: 12px;
+      }
+
+      /* ── Reset ── */
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      /* ── Body ── */
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--bg);
+        background-image:
+          radial-gradient(
+            ellipse at top left,
+            rgba(90, 50, 140, 0.2) 0%,
+            transparent 55%
+          ),
+          radial-gradient(
+            ellipse at top right,
+            rgba(160, 110, 20, 0.18) 0%,
+            transparent 55%
+          );
+        color: var(--text);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* ══════════════════════════════
+   HEADER
+══════════════════════════════ */
+      .header {
+        background-color: var(--surface);
+        border-bottom: 1px solid var(--border);
+        color: var(--text);
+        padding: 1rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+
+      .imagen-de-barberia {
+        width: 80px;
+        height: 80px;
+        border-radius: 20px;
+        object-fit: cover;
+        border: 2px solid var(--border);
+      }
+
+      .navigation-pill-list {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .navigation-pill {
+        align-items: center;
+        color: var(--text);
+        text-decoration: none;
+        padding: 0.4rem 0.9rem;
+        border-radius: 9px;
+        background-color: rgb(0, 0, 0);
+        border: 1px solid rgba(184, 134, 11, 0.3);
+        font-size: 20px;
+        transition:
+          background-color 0.5s,
+          color 0.5s,
+          border-color 0.5s,
+          transform 0.5s;
+      }
+
+      .navigation-pill:hover {
+        background-color: white;
+        color: black;
+        border-color: black;
+        transform: translateY(-3px);
+      }
+      /* ── MAIN ── */
+      .main {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+
+      .page-title {
+        font-family: "Playfair Display", serif;
+        font-size: 1.6rem;
+        color: #e0c97a;
+        margin-bottom: 0.3rem;
+      }
+      .page-subtitle {
+        color: #888;
+        font-size: 0.88rem;
+        margin-bottom: 2rem;
+      }
+
+      /* ── STATS ── */
+      .stats-row {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+      }
+      .stat-card {
+        flex: 1;
+        min-width: 140px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(184, 134, 11, 0.18);
+        border-radius: 10px;
+        padding: 1rem 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.9rem;
+      }
+      .stat-icon {
+        font-size: 1.4rem;
+        color: #b8860b;
+        width: 36px;
+        text-align: center;
+      }
+      .stat-info p {
+        font-size: 0.75rem;
+        color: #888;
+      }
+      .stat-info strong {
+        font-size: 1.3rem;
+        color: #e0c97a;
+        font-family: "Playfair Display", serif;
+      }
+
+      /* ── FILTROS ── */
+      .filtros-bar {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-bottom: 1.2rem;
+      }
+      .search-wrap {
+        position: relative;
+        flex: 1;
+        min-width: 220px;
+      }
+      .search-wrap i {
+        position: absolute;
+        left: 0.85rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #555;
+        font-size: 0.85rem;
+      }
+      .search-wrap input {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(184, 134, 11, 0.2);
+        border-radius: 8px;
+        padding: 0.6rem 0.9rem 0.6rem 2.2rem;
+        color: #fff;
+        font-size: 0.88rem;
+        font-family: "Inter", sans-serif;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+      .search-wrap input:focus {
+        border-color: #b8860b;
+      }
+      .search-wrap input::placeholder {
+        color: #555;
+      }
+
+      select.filtro {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(184, 134, 11, 0.2);
+        border-radius: 8px;
+        padding: 0.6rem 0.9rem;
+        color: #ccc;
+        font-size: 0.88rem;
+        font-family: "Inter", sans-serif;
+        outline: none;
+        cursor: pointer;
+        transition: border-color 0.2s;
+      }
+      select.filtro:focus {
+        border-color: #b8860b;
+      }
+
+      /* ── CARD TABLA ── */
+      .card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(184, 134, 11, 0.18);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .card-header {
+        background: rgba(184, 134, 11, 0.08);
+        border-bottom: 1px solid rgba(184, 134, 11, 0.18);
+        padding: 0.9rem 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+      .card-header h2 {
+        font-family: "Playfair Display", serif;
+        font-size: 1rem;
+        color: #e0c97a;
+      }
+
+      /* ── TABLA ── */
+      .table-wrap {
+        overflow-x: auto;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.88rem;
+      }
+      thead tr {
+        background: rgba(184, 134, 11, 0.07);
+        border-bottom: 1px solid rgba(184, 134, 11, 0.2);
+      }
+      thead th {
+        padding: 0.75rem 1rem;
+        text-align: left;
+        color: #b8860b;
+        font-weight: 600;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        white-space: nowrap;
+        cursor: pointer;
+        user-select: none;
+      }
+      thead th:hover {
+        color: #e0c97a;
+      }
+      thead th i.sort-icon {
+        margin-left: 0.3rem;
+        font-size: 0.7rem;
+        opacity: 0.5;
+      }
+      thead th.sorted i.sort-icon {
+        opacity: 1;
+        color: #e0c97a;
+      }
+
+      tbody tr {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        transition: background 0.15s;
+      }
+      tbody tr:hover {
+        background: rgba(184, 134, 11, 0.04);
+      }
+      tbody td {
+        padding: 0.75rem 1rem;
+        color: #ddd;
+        vertical-align: middle;
+      }
+
+      .td-id {
+        color: #555;
+        font-size: 0.8rem;
+      }
+      .td-nombre {
+        font-weight: 600;
+        color: #e0e0e0;
+      }
+      .td-telefono {
+        color: #aaa;
+        font-size: 0.85rem;
+      }
+      .td-citas {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        background: rgba(184, 134, 11, 0.1);
+        border: 1px solid rgba(184, 134, 11, 0.25);
+        color: #e0c97a;
+        font-weight: 600;
+        border-radius: 20px;
+        padding: 0.2rem 0.75rem;
+        font-size: 0.82rem;
+      }
+      .td-citas i {
+        color: #b8860b;
+        font-size: 0.75rem;
+      }
+
+      /* ── BOTONES ── */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.45rem 1rem;
+        border-radius: 8px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        transition: all 0.2s;
+        font-family: "Inter", sans-serif;
+        white-space: nowrap;
+      }
+      .btn-gold {
+        background: #b8860b;
+        color: #000;
+      }
+      .btn-gold:hover {
+        background: #d4a017;
+      }
+      .btn-outline {
+        background: rgba(184, 134, 11, 0.1);
+        color: #b8860b;
+        border: 1px solid rgba(184, 134, 11, 0.35);
+      }
+      .btn-outline:hover {
+        background: rgba(184, 134, 11, 0.2);
+      }
+
+      /* ── PAGINACIÓN ── */
+      .paginacion {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.9rem 1.5rem;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        border-top: 1px solid rgba(184, 134, 11, 0.12);
+      }
+      .pag-info {
+        color: #666;
+        font-size: 0.82rem;
+      }
+      .pag-btns {
+        display: flex;
+        gap: 0.4rem;
+      }
+      .pag-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(184, 134, 11, 0.2);
+        color: #aaa;
+        cursor: pointer;
+        font-size: 0.82rem;
+        transition: all 0.2s;
+      }
+      .pag-btn:hover {
+        border-color: #b8860b;
+        color: #b8860b;
+      }
+      .pag-btn.active {
+        background: #b8860b;
+        color: #000;
+        border-color: #b8860b;
+        font-weight: 700;
+      }
+      .pag-btn:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+      }
+
+      /* ── EMPTY / LOADING ── */
+      .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: #555;
+      }
+      .empty-state i {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        display: block;
+        color: #333;
+      }
+      .spinner {
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        border: 2px solid rgba(184, 134, 11, 0.3);
+        border-top-color: #b8860b;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* ── MODAL PERFIL ── */
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.75);
+        z-index: 500;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+      }
+      .modal-overlay.open {
+        display: flex;
+      }
+      .modal {
+        background: #16121c;
+        border: 1px solid rgba(184, 134, 11, 0.3);
+        border-radius: 16px;
+        padding: 2rem;
+        max-width: 480px;
+        width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+      .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+      }
+      .modal-header h3 {
+        font-family: "Playfair Display", serif;
+        color: #e0c97a;
+        font-size: 1.15rem;
+      }
+      .modal-close {
+        background: none;
+        border: none;
+        color: #666;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: color 0.2s;
+        padding: 0.2rem;
+      }
+      .modal-close:hover {
+        color: #e0c97a;
+      }
+
+      .perfil-avatar {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        background: rgba(184, 134, 11, 0.15);
+        border: 2px solid rgba(184, 134, 11, 0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        color: #b8860b;
+        margin: 0 auto 1.2rem;
+      }
+      .perfil-nombre {
+        text-align: center;
+        font-family: "Playfair Display", serif;
+        font-size: 1.2rem;
+        color: #e0c97a;
+        margin-bottom: 0.25rem;
+      }
+      .perfil-rol {
+        text-align: center;
+        font-size: 0.78rem;
+        color: #888;
+        margin-bottom: 1.5rem;
+      }
+
+      .perfil-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+      }
+      .perfil-field {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(184, 134, 11, 0.12);
+        border-radius: 8px;
+        padding: 0.7rem 0.9rem;
+      }
+      .perfil-field label {
+        font-size: 0.72rem;
+        color: #666;
+        display: block;
+        margin-bottom: 0.2rem;
+      }
+      .perfil-field span {
+        font-size: 0.88rem;
+        color: #ddd;
+        font-weight: 500;
+      }
+      .perfil-field.full {
+        grid-column: 1 / -1;
+      }
+
+      .perfil-citas-titulo {
+        font-size: 0.8rem;
+        color: #b8860b;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+      .cita-item {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(184, 134, 11, 0.1);
+        border-radius: 8px;
+        padding: 0.7rem 0.9rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+      .cita-item-info {
+        font-size: 0.83rem;
+        color: #ccc;
+      }
+      .cita-item-info strong {
+        color: #e0c97a;
+      }
+      .cita-item-fecha {
+        font-size: 0.78rem;
+        color: #666;
+      }
+      .badge-completada {
+        font-size: 0.7rem;
+        font-weight: 600;
+        padding: 0.15rem 0.55rem;
+        border-radius: 20px;
+        background: #0a2e1a;
+        color: #4caf50;
+      }
+
+      /* ── TOAST ── */
+      .toast {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        z-index: 9999;
+        padding: 0.75rem 1.25rem;
+        border-radius: 8px;
+        font-size: 0.88rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        animation: slideIn 0.3s ease;
+      }
+      .toast.ok {
+        background: #1a3a1a;
+        color: #86efac;
+        border: 1px solid #22c55e;
+      }
+      .toast.err {
+        background: #7f1d1d;
+        color: #fca5a5;
+        border: 1px solid #ef4444;
+      }
+      @keyframes slideIn {
+        from {
+          transform: translateY(20px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      /* ── FOOTER ── */
+      .footer {
+        margin-top: 3rem;
+        padding: 1.5rem 2rem;
+        border-top: 1px solid rgba(184, 134, 11, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+        color: #555;
+        font-size: 0.82rem;
+      }
+      .footer span {
+        color: #b8860b;
+        font-family: "Playfair Display", serif;
+        font-size: 0.95rem;
+      }
+      @media (max-width: 900px) {
+  .carousel-card {
+    flex: 0 0 240px;
+    width: 240px;
+    max-width: 240px;
+  }
+}
+
+/* ══ RESPONSIVE ══ */
+@media (max-width: 768px) {
+  .header {
+    padding: 0.85rem 1rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .header .block {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .imagen-de-barberia {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    flex-shrink: 0;
+  }
+
+  .navigation-pill-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    width: 100%;
+  }
+
+  .navigation-pill {
+    font-size: 13px;
+    padding: 0.5rem 0.4rem;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-radius: 8px;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+  }
+
+  /* Main */
+  .main {
+    padding: 1.2rem 0.9rem;
+  }
+
+  .page-title {
+    font-size: 1.3rem;
+  }
+
+  /* Stats */
+  .stats-row {
+    gap: 0.6rem;
+  }
+  .stat-card {
+    min-width: 0;
+    padding: 0.75rem 0.9rem;
+    gap: 0.6rem;
+  }
+  .stat-info strong {
+    font-size: 1.1rem;
+  }
+
+  /* Filtros */
+  .filtros-bar {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .search-wrap {
+    min-width: 0;
+    width: 100%;
+  }
+  select.filtro {
+    width: 100%;
+  }
+
+  /* Card header */
+  .card-header {
+    padding: 0.75rem 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+
+  /* Tabla: ocultar ID */
+  thead th:nth-child(1),
+  tbody td:nth-child(1) {
+    display: none;
+  }
+
+  thead th,
+  tbody td {
+    padding: 0.6rem 0.6rem;
+    font-size: 0.82rem;
+  }
+
+  .td-citas {
+    padding: 0.15rem 0.5rem;
+    font-size: 0.78rem;
+  }
+
+  /* Botones */
+  .btn {
+    padding: 0.4rem 0.7rem;
+    font-size: 0.78rem;
+    gap: 0.25rem;
+  }
+
+  /* Paginación */
+  .paginacion {
+    padding: 0.75rem 1rem;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  /* Modal */
+  .modal {
+    padding: 1.5rem 1.2rem;
+    border-radius: 12px;
+  }
+  .perfil-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Toast */
+  .toast {
+    bottom: 1rem;
+    right: 1rem;
+    left: 1rem;
+    text-align: center;
+  }
+
+  /* Footer */
+  .footer {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1.2rem 1rem;
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 500px) {
+  .navigation-pill {
+    padding: 0.3rem 0.7rem;
+    font-size: 0.8rem;
+  }
+
+  .modal {
+    max-height: 95vh;
+  }
+
+  /* Ocultar teléfono en pantallas muy pequeñas */
+  thead th:nth-child(3),
+  tbody td:nth-child(3) {
+    display: none;
+  }
+
+  .page-title {
+    font-size: 1.1rem;
+  }
+
+  .stat-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .navigation-pill-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .navigation-pill {
+    font-size: 12px;
+    padding: 0.45rem 0.3rem;
+  }
+}
+
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="block">
+        <img
+          class="imagen-de-barberia"
+          src="/images/titanicon.jpeg"
+          alt="Logo Titan Barbershop"
+        />
+      </div>
+      <nav class="navigation-pill-list" aria-label="Navegación principal">
+        <a href="/perfil" class="navigation-pill">
+          <span>Mi Perfil</span>
+        </a>
+        <a href="/homebarber" class="navigation-pill">
+          <span>Inicio</span>
+        </a>
+        <a href="/barber_agenda" class="navigation-pill">
+          <span>Agenda</span>
+        </a>
+        <a href="/notibarbero" class="navigation-pill">
+          <span>Notificaciones</span>
+        </a>
+        <a href="/panel" class="navigation-pill">
+          <span>Panel de Control</span>
+        </a>
+        <a href="/" class="navigation-pill">
+          <span>Cerrar Sesión</span>
+        </a>
+      </nav>
+    </header>
+
+    <!-- MAIN -->
+    <main class="main">
+      <h1 class="page-title">
+        <i
+          class="fa-solid fa-users"
+          style="color: #b8860b; margin-right: 0.5rem"
+        ></i
+        >Usuarios
+      </h1>
+      <p class="page-subtitle">
+        Listado de usuarios registrados en la plataforma.
+      </p>
+
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+          <div class="stat-info">
+            <p>Total</p>
+            <strong id="stat-total">—</strong>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fa-solid fa-calendar-check"></i>
+          </div>
+          <div class="stat-info">
+            <p>Citas completadas</p>
+            <strong id="stat-citas">—</strong>
+          </div>
+        </div>
+        </div>
+      </div>
+
+      <!-- Filtros -->
+      <div class="filtros-bar">
+        <div class="search-wrap">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input
+            type="text"
+            id="input-buscar"
+            placeholder="Buscar por nombre o teléfono..."
+            oninput="filtrar()"
+          />
+        </div>
+        <select class="filtro" id="filtro-citas" onchange="filtrar()">
+          <option value="">Todas las citas</option>
+          <option value="con">Con citas completadas</option>
+          <option value="sin">Sin citas completadas</option>
+        </select>
+        <select class="filtro" id="filtro-orden" onchange="filtrar()">
+          <option value="nombre">Ordenar: Nombre A-Z</option>
+          <option value="citas">Ordenar: Más citas</option>
+          <option value="id">Ordenar: ID</option>
+        </select>
+      </div>
+
+      <!-- Tabla -->
+      <div class="card">
+        <div class="card-header">
+          <h2>
+            <i
+              class="fa-solid fa-table-list"
+              style="color: #b8860b; margin-right: 0.5rem"
+            ></i
+            >Lista de Clientes
+          </h2>
+          <span
+            id="contador-label"
+            style="color: #888; font-size: 0.82rem"
+          ></span>
+        </div>
+
+        <div
+          id="loading-clientes"
+          style="padding: 2.5rem; text-align: center; color: #888"
+        >
+          <span class="spinner"></span> Cargando clientes...
+        </div>
+
+        <div class="table-wrap" id="tabla-wrap" style="display: none">
+          <table>
+            <thead>
+              <tr>
+                <th onclick="ordenarPor('id')">
+                  ID <i class="fa-solid fa-sort sort-icon" id="sort-id"></i>
+                </th>
+                <th onclick="ordenarPor('nombre')">
+                  Nombre
+                  <i class="fa-solid fa-sort sort-icon" id="sort-nombre"></i>
+                </th>
+                <th>Teléfono</th>
+                <th onclick="ordenarPor('citas')" style="text-align: center">
+                  Citas Completadas
+                  <i class="fa-solid fa-sort sort-icon" id="sort-citas"></i>
+                </th>
+                <th style="text-align: center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-clientes"></tbody>
+          </table>
+        </div>
+
+        <div id="empty-clientes" class="empty-state" style="display: none">
+          <i class="fa-solid fa-users-slash"></i>
+          <p>No se encontraron clientes.</p>
+        </div>
+
+        <!-- Paginación -->
+        <div class="paginacion" id="paginacion" style="display: none">
+          <span class="pag-info" id="pag-info"></span>
+          <div class="pag-btns" id="pag-btns"></div>
+        </div>
+      </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <span>The Titan Barbershop</span>
+      <p>Panel de Administración · Clientes</p>
+    </footer>
+
+    <!-- MODAL PERFIL (reutilizado del template de citas) -->
+    <div class="modal-overlay" id="modal-perfil">
+      <div class="modal">
+        <div class="modal-header">
+          <h3>
+            <i
+              class="fa-solid fa-user"
+              style="color: #b8860b; margin-right: 0.5rem"
+            ></i
+            >Perfil del Cliente
+          </h3>
+          <button class="modal-close" onclick="cerrarPerfil()">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div
+          id="perfil-loading"
+          style="text-align: center; padding: 2rem; color: #888"
+        >
+          <span class="spinner"></span> Cargando perfil...
+        </div>
+
+        <div id="perfil-contenido" style="display: none">
+          <div class="perfil-avatar"><i class="fa-solid fa-user"></i></div>
+          <p class="perfil-nombre" id="p-nombre"></p>
+          <p class="perfil-rol" id="p-rol"></p>
+
+          <div class="perfil-grid">
+            <div class="perfil-field">
+              <label
+                ><i
+                  class="fa-solid fa-id-badge"
+                  style="color: #b8860b; margin-right: 0.3rem"
+                ></i
+                >ID</label
+              >
+              <span id="p-id"></span>
+            </div>
+            <div class="perfil-field">
+              <label>Teléfono</label
+              >
+              <span id="p-telefono"></span>
+            </div>
+            <div class="perfil-field full">
+              <label
+                ><i
+                  class="fa-solid fa-envelope"
+                  style="color: #b8860b; margin-right: 0.3rem"
+                ></i
+                >Correo</label
+              >
+              <span id="p-email"></span>
+            </div>
+            <div class="perfil-field">
+              <label
+                ><i
+                  class="fa-solid fa-calendar-check"
+                  style="color: #b8860b; margin-right: 0.3rem"
+                ></i
+                >Citas completadas</label
+              >
+              <span
+                id="p-citas-count"
+                style="color: #e0c97a; font-weight: 700; font-size: 1.1rem"
+              ></span>
+            </div>
+            <div class="perfil-field">
+              <label
+                ><i
+                  class="fa-solid fa-calendar-plus"
+                  style="color: #b8860b; margin-right: 0.3rem"
+                ></i
+                >Miembro desde</label
+              >
+              <span id="p-fecha"></span>
+            </div>
+          </div>
+
+          <!-- Últimas citas completadas -->
+          <div id="perfil-citas-section">
+            <p class="perfil-citas-titulo">
+              <i class="fa-solid fa-scissors"></i> Últimas citas completadas
+            </p>
+            <div id="perfil-citas-lista"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const API_BASE =
+        window.location.hostname === "localhost"
+          ? "http://localhost:4000/api"
+          : "/api";
+
+      function getToken() {
+        return localStorage.getItem("token");
+      }
+
+      let todosClientes = [];
+      let clientesFiltrados = [];
+      let paginaActual = 1;
+      const POR_PAGINA = 10;
+      let ordenActual = "nombre";
+      let ordenAsc = true;
+
+async function cargarClientes() {
+  try {
+    const resp = await fetch(`${API_BASE}/admin/clientes`, {
+      headers: { Authorization: `Bearer ${getToken()}` },
+    });
+
+    // Ver exactamente qué devuelve el servidor
+    const data = await resp.json();
+    console.log("Respuesta clientes:", data);
+
+    if (!resp.ok) throw new Error(data.error || `HTTP ${resp.status}`);
+
+    todosClientes = data;
+    actualizarStats();
+    filtrar();
+  } catch (err) {
+    console.error("Error cargarClientes:", err.message);
+    mostrarToast(`Error: ${err.message}`, true);
+
+    // Mostrar tabla vacía en lugar de quedarse en loading
+    document.getElementById("empty-clientes").style.display = "block";
+  } finally {
+    document.getElementById("loading-clientes").style.display = "none";
+  }
+}
+
+      // ── Stats ──
+      function actualizarStats() {
+        document.getElementById("stat-total").textContent =
+          todosClientes.length;
+        document.getElementById("stat-citas").textContent =
+          todosClientes.reduce((a, c) => a + (c.citas_completadas || 0), 0);
+      }
+
+      // ── Filtrar y ordenar ──
+      function filtrar() {
+        const buscar = document
+          .getElementById("input-buscar")
+          .value.toLowerCase()
+          .trim();
+        const fCitas = document.getElementById("filtro-citas").value;
+        const fOrden = document.getElementById("filtro-orden").value;
+
+        clientesFiltrados = todosClientes.filter((c) => {
+          const matchBuscar =
+            !buscar ||
+            (c.nombre || "").toLowerCase().includes(buscar) ||
+            (c.apellidoP || "").toLowerCase().includes(buscar) ||
+            (c.telefono || "").includes(buscar);
+          const matchCitas =
+            fCitas === "con"
+              ? (c.citas_completadas || 0) > 0
+              : fCitas === "sin"
+                ? (c.citas_completadas || 0) === 0
+                : true;
+          return matchBuscar && matchCitas;
+        });
+
+        // Ordenar
+        clientesFiltrados.sort((a, b) => {
+          if (fOrden === "nombre")
+            return `${a.nombre}${a.apellidoP}`.localeCompare(
+              `${b.nombre}${b.apellidoP}`,
+            );
+          if (fOrden === "citas")
+            return (b.citas_completadas || 0) - (a.citas_completadas || 0);
+          if (fOrden === "id") return a.id_usuario - b.id_usuario;
+          return 0;
+        });
+
+        paginaActual = 1;
+        renderTabla();
+      }
+
+      function ordenarPor(campo) {
+        if (ordenActual === campo) ordenAsc = !ordenAsc;
+        else {
+          ordenActual = campo;
+          ordenAsc = true;
+        }
+        document
+          .querySelectorAll("thead th")
+          .forEach((th) => th.classList.remove("sorted"));
+        filtrar();
+      }
+
+      // ── Render tabla ──
+      function renderTabla() {
+        const tbody = document.getElementById("tbody-clientes");
+        tbody.innerHTML = "";
+
+        const total = clientesFiltrados.length;
+        document.getElementById("contador-label").textContent =
+          `${total} cliente${total !== 1 ? "s" : ""}`;
+
+        if (!total) {
+          document.getElementById("tabla-wrap").style.display = "none";
+          document.getElementById("empty-clientes").style.display = "block";
+          document.getElementById("paginacion").style.display = "none";
+          return;
+        }
+
+        document.getElementById("tabla-wrap").style.display = "block";
+        document.getElementById("empty-clientes").style.display = "none";
+
+        const inicio = (paginaActual - 1) * POR_PAGINA;
+        const pagina = clientesFiltrados.slice(inicio, inicio + POR_PAGINA);
+
+        pagina.forEach((c) => {
+          const nombre =
+            `${c.nombre || ""} ${c.apellidoP || ""}`.trim() || "Sin nombre";
+          const tel = c.telefono || "—";
+          const citas = c.citas_completadas || 0;
+
+          tbody.innerHTML += `
+          <tr>
+            <td class="td-id">#${c.id_usuario}</td>
+            <td class="td-nombre">${nombre}</td>
+            <td class="td-telefono">
+              ${
+                c.telefono
+                  ? `<a href="tel:${c.telefono}" style="color:#aaa;text-decoration:none;">
+                    ${c.telefono}
+                   </a>`
+                  : '<span style="color:#444;">—</span>'
+              }
+            </td>
+            <td style="text-align:center;">
+              <span class="td-citas">
+                <i class="fa-solid fa-scissors"></i> ${citas}
+              </span>
+            </td>
+            <td style="text-align:center;">
+              <button class="btn btn-gold" onclick="verPerfil(${c.id_usuario})">
+                <i class="fa-solid fa-user"></i> Perfil
+              </button>
+            </td>
+          </tr>
+        `;
+        });
+
+        renderPaginacion(total);
+      }
+
+      // ── Paginación ──
+      function renderPaginacion(total) {
+        const totalPags = Math.ceil(total / POR_PAGINA);
+        const pag = document.getElementById("paginacion");
+        const btns = document.getElementById("pag-btns");
+        const info = document.getElementById("pag-info");
+
+        if (totalPags <= 1) {
+          pag.style.display = "none";
+          return;
+        }
+        pag.style.display = "flex";
+
+        const inicio = (paginaActual - 1) * POR_PAGINA + 1;
+        const fin = Math.min(paginaActual * POR_PAGINA, total);
+        info.textContent = `Mostrando ${inicio}–${fin} de ${total}`;
+
+        btns.innerHTML = `
+        <button class="pag-btn" onclick="irPagina(${paginaActual - 1})" ${paginaActual === 1 ? "disabled" : ""}>
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+      `;
+        for (let i = 1; i <= totalPags; i++) {
+          btns.innerHTML += `
+          <button class="pag-btn ${i === paginaActual ? "active" : ""}" onclick="irPagina(${i})">${i}</button>
+        `;
+        }
+        btns.innerHTML += `
+        <button class="pag-btn" onclick="irPagina(${paginaActual + 1})" ${paginaActual === totalPags ? "disabled" : ""}>
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      `;
+      }
+
+      function irPagina(n) {
+        const total = Math.ceil(clientesFiltrados.length / POR_PAGINA);
+        if (n < 1 || n > total) return;
+        paginaActual = n;
+        renderTabla();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      // ── Ver perfil (reutilizado del template de citas) ──
+      async function verPerfil(id) {
+        window.location.href = `/admin/cliente/${id}`;
+
+
+        try {
+          const resp = await fetch(`${API_BASE}/admin/cliente/${id}`, {
+            headers: { Authorization: `Bearer ${getToken()}` },
+          });
+          if (!resp.ok) throw new Error();
+          const d = await resp.json();
+
+          document.getElementById("p-id").textContent = `#${d.id_usuario}`;
+          document.getElementById("p-nombre").textContent =
+            `${d.nombre || ""} ${d.apellidoP || ""}`.trim();
+          document.getElementById("p-rol").textContent = d.rol || "cliente";
+          document.getElementById("p-telefono").textContent =
+            d.telefono || "No registrado";
+          document.getElementById("p-email").textContent =
+            d.email || "No registrado";
+          document.getElementById("p-citas-count").textContent =
+            d.citas_completadas || 0;
+          document.getElementById("p-fecha").textContent = d.fecha_registro
+            ? new Date(d.fecha_registro).toLocaleDateString("es-MX", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })
+            : "—";
+
+          // Últimas citas
+          const lista = document.getElementById("perfil-citas-lista");
+          lista.innerHTML = "";
+          if (d.ultimas_citas && d.ultimas_citas.length) {
+            d.ultimas_citas.forEach((c) => {
+              const fecha = new Date(c.fecha_hora).toLocaleDateString("es-MX", {
+                weekday: "short",
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              });
+              lista.innerHTML += `
+              <div class="cita-item">
+                <div>
+                  <div class="cita-item-info"><strong>${c.servicio || "Servicio"}</strong></div>
+                  <div class="cita-item-fecha"><i class="fa-solid fa-calendar" style="color:#b8860b;margin-right:.3rem;"></i>${fecha}</div>
+                </div>
+                <span class="badge-completada">Completada</span>
+              </div>
+            `;
+            });
+          } else {
+            lista.innerHTML = `<p style="color:#555;font-size:.85rem;text-align:center;padding:.75rem;">Sin citas completadas aún.</p>`;
+          }
+
+          document.getElementById("perfil-loading").style.display = "none";
+          document.getElementById("perfil-contenido").style.display = "block";
+        } catch {
+          mostrarToast("Error al cargar perfil", true);
+          cerrarPerfil();
+        }
+      }
+
+      function cerrarPerfil() {
+        document.getElementById("modal-perfil").classList.remove("open");
+      }
+
+      // ── Toast ──
+      function mostrarToast(msg, esError = false) {
+        const t = document.createElement("div");
+        t.className = `toast ${esError ? "err" : "ok"}`;
+        t.textContent = msg;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 3500);
+      }
+
+      // ── Init ──
+      document.addEventListener("DOMContentLoaded", () => {
+        const token = getToken();
+        if (!token) {
+          window.location.href = "/";
+          return;
+        }
+        try {
+          const p = JSON.parse(atob(token.split(".")[1]));
+          if (p.rol !== "admin") {
+            window.location.href = "/home";
+            return;
+          }
+        } catch {
+          window.location.href = "/";
+          return;
+        }
+        cargarClientes();
+      });
+
+      const logoutLink = document.getElementById("logout-link");
+      if (logoutLink) {
+        logoutLink.addEventListener("click", (e) => {
+          e.preventDefault();
+          localStorage.removeItem("token");
+          window.location.href = "/";
+        });
+      }
+      document
+        .getElementById("modal-perfil")
+        .addEventListener("click", function (e) {
+          if (e.target === this) cerrarPerfil();
+        });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/static/alerts.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <title>Panel de Control – The Titan Barbershop</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --bg: #0d0b0e;
+        --surface: #16121c;
+        --surface-2: #1e1828;
+        --border: rgba(184, 134, 11, 0.22);
+        --border-hover: rgba(184, 134, 11, 0.5);
+        --gold: #000000;
+        --gold-light: #ffffff;
+        --text: #ffffff;
+        --text-muted: rgba(255, 255, 255, 0.885);
+        --text-soft: rgba(255, 255, 255, 0.736);
+        --error: #c0392b;
+        --radius: 12px;
+      }
+
+      /* ── Reset ── */
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      /* ── Body ── */
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--bg);
+        background-image:
+          radial-gradient(
+            ellipse at top left,
+            rgba(90, 50, 140, 0.2) 0%,
+            transparent 55%
+          ),
+          radial-gradient(
+            ellipse at top right,
+            rgba(160, 110, 20, 0.18) 0%,
+            transparent 55%
+          );
+        color: var(--text);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* ══════════════════════════════
+   HEADER
+══════════════════════════════ */
+      .header {
+        background-color: var(--surface);
+        border-bottom: 1px solid var(--border);
+        color: var(--text);
+        padding: 1rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+
+      .imagen-de-barberia {
+        width: 80px;
+        height: 80px;
+        border-radius: 20px;
+        object-fit: cover;
+        border: 2px solid var(--border);
+      }
+
+      .navigation-pill-list {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .navigation-pill {
+        align-items: center;
+        color: var(--text);
+        text-decoration: none;
+        padding: 0.4rem 0.9rem;
+        border-radius: 9px;
+        background-color: rgb(0, 0, 0);
+        border: 1px solid rgba(184, 134, 11, 0.3);
+        font-size: 20px;
+        transition:
+          background-color 0.5s,
+          color 0.5s,
+          border-color 0.5s,
+          transform 0.5s;
+      }
+
+      .navigation-pill:hover {
+        background-color: white;
+        color: black;
+        border-color: black;
+        transform: translateY(-3px);
+      }
+
+      /* ===== MAIN ===== */
+      .main {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 3rem 1.5rem;
+      }
+
+      .panel-title {
+        font-family: "Playfair Display", serif;
+        font-size: 2rem;
+        color: #ffffff;
+        text-align: center;
+        margin-bottom: 0.5rem;
+      }
+      .panel-subtitle {
+        text-align: center;
+        color: #bcbcbc;
+        font-size: 0.9rem;
+        margin-bottom: 3rem;
+      }
+
+      /* ===== GRID DE TARJETAS ===== */
+      .panel-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .panel-card {
+        background: var(--surface);
+        border: 1px solid #ffffff33;
+        border-radius: 14px;
+        padding: 2rem 1.5rem;
+        text-align: center;
+        text-decoration: none;
+        color: #eee;
+        cursor: pointer;
+        transition:
+          transform 0.5s,
+          border-color 0.5s,
+          box-shadow 0.5s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+      .panel-card:hover {
+        transform: translateY(-4px);
+        border-color: #ffffff;
+        box-shadow: 0 8px 30px rgba(201, 168, 76, 0.15);
+      }
+
+      .panel-card .card-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: #c9a84c18;
+        border: 1px solid #c9a84c44;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.6rem;
+        color: #ffffff;
+        transition: background 0.2s;
+      }
+      .panel-card:hover .card-icon {
+        background: #c9a84c30;
+      }
+
+      .panel-card .card-label {
+        font-family: "Playfair Display", serif;
+        font-size: 1.1rem;
+        color: #ffffff;
+      }
+
+      .panel-card .card-desc {
+        font-size: 0.8rem;
+        color: #979797;
+        line-height: 1.4;
+      }
+
+      /* ===== FOOTER ===== */
+      .footer {
+        text-align: center;
+        padding: 2rem;
+        color: #444;
+        font-size: 0.78rem;
+        border-top: 1px solid #1e1e1e;
+        margin-top: 4rem;
+      }
+      @media (max-width: 768px) {
+        .header {
+          padding: 0.85rem 1rem;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 0.75rem;
+        }
+
+        /* Fila superior: logo + nombre del sitio */
+        .header .block {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+        }
+
+        .imagen-de-barberia {
+          width: 48px;
+          height: 48px;
+          border-radius: 12px;
+          flex-shrink: 0;
+        }
+
+        /* Nav: grid de 3 columnas, pills apilados en vertical */
+        .navigation-pill-list {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 6px;
+          width: 100%;
+        }
+
+        .navigation-pill {
+          font-size: 13px;
+          padding: 0.5rem 0.4rem;
+          text-align: center;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          border-radius: 8px;
+          justify-content: center;
+          display: flex;
+          align-items: center;
+        }
+
+        .footer {
+          flex-direction: column;
+          gap: 1.5rem;
+        }
+        .main-content {
+          padding: 1.5rem 1rem 2.5rem;
+        }
+
+        .notifications-header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .notification-tabs {
+          flex-wrap: wrap;
+        }
+
+        .notification-tab {
+          flex: 1;
+          text-align: center;
+          min-width: 120px;
+        }
+
+        .notification-meta {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .notification-actions {
+          width: 100%;
+          justify-content: flex-start;
+          margin-top: 0.5rem;
+        }
+      }
+
+      @media (max-width: 500px) {
+        .navigation-pill {
+          padding: 0.3rem 0.7rem;
+          font-size: 0.8rem;
+        }
+      }
+      @media (max-width: 400px) {
+        .navigation-pill-list {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .navigation-pill {
+          font-size: 12px;
+          padding: 0.45rem 0.3rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="block">
+        <img
+          class="imagen-de-barberia"
+          src="/images/titanicon.jpeg"
+          alt="Logo Titan Barbershop"
+        />
+      </div>
+      <nav class="navigation-pill-list" aria-label="Navegación principal">
+        <a href="/perfil" class="navigation-pill">
+          <span>Mi Perfil</span>
+        </a>
+        <a href="/homebarber" class="navigation-pill">
+          <span>Inicio</span>
+        </a>
+        <a href="/barber_agenda" class="navigation-pill">
+          <span>Agenda</span>
+        </a>
+        <a href="/notibarbero" class="navigation-pill">
+          <span>Notificaciones</span>
+        </a>
+        <a href="/panel" class="navigation-pill">
+          <span>Panel de Control</span>
+        </a>
+        <a href="/" class="navigation-pill">
+          <span>Cerrar Sesión</span>
+        </a>
+      </nav>
+    </header>
+
+    <main class="main">
+      <h1 class="panel-title">Panel de Control</h1>
+      <p class="panel-subtitle">
+        Administra todos los aspectos de The Titan Barbershop
+      </p>
+
+      <div class="panel-grid">
+        <!-- Citas -->
+        <a href="/admin/citas" class="panel-card">
+          <div class="card-icon">
+            <i class="fa-solid fa-calendar-check"></i>
+          </div>
+          <span class="card-label">Citas</span>
+          <span class="card-desc"
+            >Historial, edición y evidencias de todas las citas</span
+          >
+        </a>
+
+        <!-- Horario -->
+        <a href="/admin/horario" class="panel-card">
+          <div class="card-icon">
+            <i class="fa-solid fa-clock"></i>
+          </div>
+          <span class="card-label">Horario</span>
+          <span class="card-desc"
+            >Gestiona los horarios y disponibilidad de los barberos</span
+          >
+        </a>
+
+        <!-- Servicios -->
+        <a href="/admin/servicios" class="panel-card">
+          <div class="card-icon">
+            <i class="fa-solid fa-scissors"></i>
+          </div>
+          <span class="card-label">Servicios</span>
+          <span class="card-desc"
+            >Agrega, edita o elimina los servicios ofrecidos</span
+          >
+        </a>
+
+        <!-- Clientes -->
+        <a href="/admin/clientes" class="panel-card">
+          <div class="card-icon">
+            <i class="fa-solid fa-users"></i>
+          </div>
+          <span class="card-label">Clientes</span>
+          <span class="card-desc"
+            >Consulta y administra los perfiles de los clientes</span
+          >
+        </a>
+      </div>
+    </main>
+
+    <footer class="footer">
+      © 2025 The Titan Barbershop · Panel de Administración
+    </footer>
+
+    <script>
+      const API_BASE =
+        window.location.hostname === "localhost"
+          ? "http://localhost:4000/api"
+          : "/api";
+
+      function getToken() {
+        return localStorage.getItem("token");
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const token = getToken();
+        if (!token) {
+          window.location.href = "/";
+          return;
+        }
+
+        // Verificar que sea admin
+        try {
+          const payload = JSON.parse(atob(token.split(".")[1]));
+          if (payload.rol !== "admin") {
+            window.location.href = "/home";
+            return;
+          }
+        } catch {
+          window.location.href = "/";
+        }
+      });
+
+      document.getElementById("logout-link").addEventListener("click", (e) => {
+        e.preventDefault();
+        localStorage.removeItem("token");
+        window.location.href = "/";
+      });
+    </script>
+  </body>
+</html>

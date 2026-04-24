@@ -1,0 +1,173 @@
+/* ── Toast ── */
+.toast-container {
+  position: fixed;
+  bottom: 28px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.app-toast {
+  pointer-events: all;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 18px;
+  border-radius: 5px;
+  font-family: "Inter", sans-serif;
+  font-size: 18px;
+  min-width: 240px;
+  max-width: 360px;
+  background: rgba(90, 50, 140, 0.2) 0%;
+  border: 1px solid rgba(184, 134, 11, 0.3);
+  color: #ffffff;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+  opacity: 1;
+  transition: opacity 0.18s ease;
+  animation: toastIn 0.25s ease;
+}
+
+@keyframes toastIn {
+  from {
+    transform: translateY(16px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.app-toast.success {
+  border-color: rgba(154, 255, 124, 0.5);
+}
+.app-toast.error {
+  border-color: rgba(255, 129, 115, 0.5);
+}
+.app-toast.info {
+  border-color: rgba(35, 112, 255, 0.4);
+}
+.app-toast.warning {
+  border-color: rgba(230, 180, 0, 0.5);
+}
+
+.app-toast .msg {
+  flex: 1;
+  line-height: 1.5;
+}
+
+.app-toast .close-btn {
+  background: none;
+  border: none;
+  color: inherit;
+  opacity: 0.5;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  transition: opacity 0.2s;
+}
+.app-toast .close-btn:hover {
+  opacity: 1;
+}
+
+/* ── Modal ── */
+.app-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.app-modal {
+  background: #16121c;
+  border: 1px solid rgba(184, 134, 11, 0.3);
+  border-radius: 6px;
+  padding: 32px 28px;
+  max-width: 380px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  position: relative;
+}
+
+.app-modal::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #b8860b, transparent);
+  border-radius: 6px 6px 0 0;
+}
+
+.app-modal h3 {
+  font-family: "Playfair Display", serif;
+  font-size: 18px;
+  color: #e8d5a0;
+  margin-bottom: 10px;
+}
+
+.app-modal p {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.app-modal .row {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.app-btn {
+  padding: 9px 20px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: "Inter", sans-serif;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.25s;
+  border: 1px solid transparent;
+}
+
+.app-btn.ghost {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+.app-btn.ghost:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  color: white;
+  transform: translateY(-3px);
+}
+
+.app-btn.primary {
+  background: linear-gradient(135deg, #7a5c00, #b8860b);
+  color: #000000;
+  font-weight: 700;
+}
+.app-btn.primary:hover {
+  color: white;
+  border-color: rgba(0, 0, 0, 0.6);
+  transform: translateY(-3px);
+}

@@ -1,0 +1,1568 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/static/alerts.css" />
+    <title>Panel Admin – Citas</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap");
+
+      :root {
+        --bg: #0d0b0e;
+        --surface: #16121c;
+        --surface-2: #1e1828;
+        --border: rgba(184, 134, 11, 0.22);
+        --border-hover: rgba(184, 134, 11, 0.5);
+        --gold: #b8860b;
+        --gold-light: #ffffff;
+        --text: #ffffff;
+        --text-muted: rgba(255, 255, 255, 0.885);
+        --text-soft: rgba(255, 255, 255, 0.55);
+        --radius: 12px;
+      }
+
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--bg);
+        background-image:
+          radial-gradient(
+            ellipse at top left,
+            rgba(90, 50, 140, 0.2) 0%,
+            transparent 55%
+          ),
+          radial-gradient(
+            ellipse at bottom right,
+            rgba(160, 110, 20, 0.18) 0%,
+            transparent 55%
+          );
+        color: var(--text);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* ══ HEADER ══ */
+      .header {
+        background-color: var(--surface);
+        border-bottom: 1px solid var(--border);
+        padding: 1rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .imagen-de-barberia {
+        width: 64px;
+        height: 64px;
+        border-radius: 16px;
+        object-fit: cover;
+        border: 2px solid var(--border);
+      }
+      .navigation-pill-list {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .navigation-pill {
+        color: var(--text);
+        text-decoration: none;
+        padding: 0.4rem 0.9rem;
+        border-radius: 9px;
+        background-color: #000;
+        border: 1px solid rgba(184, 134, 11, 0.3);
+        font-size: 0.9rem;
+        transition:
+          background-color 0.3s,
+          color 0.3s,
+          border-color 0.3s,
+          transform 0.3s;
+        white-space: nowrap;
+      }
+      .navigation-pill:hover {
+        background-color: white;
+        color: black;
+        border-color: black;
+        transform: translateY(-2px);
+      }
+      .navigation-pill.active {
+        background-color: rgba(184, 134, 11, 0.15);
+        border-color: rgba(184, 134, 11, 0.5);
+      }
+
+      /* ══ MAIN ══ */
+      .main-content {
+        flex: 1;
+        padding: 2rem 1.5rem 3rem;
+        max-width: 1300px;
+        margin: 0 auto;
+        width: 100%;
+      }
+      .page-title {
+        font-family: "Playfair Display", serif;
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: var(--gold-light);
+        letter-spacing: 0.03em;
+        margin-bottom: 1.5rem;
+      }
+
+      /* ══ STATS ══ */
+      .stats-bar {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.8rem;
+      }
+      .stat-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 1.1rem 1rem;
+        text-align: center;
+      }
+      .stat-card .num {
+        font-size: 2rem;
+        font-weight: 700;
+        color: rgba(184, 134, 11, 0.9);
+      }
+      .stat-card .lbl {
+        font-size: 0.7rem;
+        color: var(--text-soft);
+        margin-top: 0.25rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .stat-card.verde .num {
+        color: #6fcf97;
+      }
+      .stat-card.azul .num {
+        color: #3498db;
+      }
+      .stat-card.rojo .num {
+        color: #eb5757;
+      }
+
+      /* ══ TOOLBAR ══ */
+      .toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+        align-items: center;
+        margin-bottom: 1.2rem;
+      }
+      .search-wrap {
+        position: relative;
+        flex: 1;
+        min-width: 220px;
+      }
+      .search-wrap input {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--border);
+        border-radius: 7px;
+        padding: 0.65rem 1rem 0.65rem 2.4rem;
+        color: var(--text);
+        font-family: "Inter", sans-serif;
+        font-size: 0.92rem;
+        outline: none;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+      }
+      .search-wrap input:focus {
+        border-color: rgba(184, 134, 11, 0.6);
+        box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.12);
+      }
+      .search-wrap input::placeholder {
+        color: var(--text-soft);
+      }
+      .search-wrap .ico {
+        position: absolute;
+        left: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-soft);
+        font-size: 0.9rem;
+        pointer-events: none;
+      }
+      .filter-select {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--border);
+        border-radius: 7px;
+        padding: 0.65rem 0.9rem;
+        color: var(--text);
+        font-family: "Inter", sans-serif;
+        font-size: 0.85rem;
+        outline: none;
+        cursor: pointer;
+        transition: border-color 0.2s;
+      }
+      .filter-select:focus {
+        border-color: rgba(184, 134, 11, 0.6);
+      }
+      .filter-select option {
+        background: var(--surface);
+        color: var(--text);
+      }
+
+      /* ══ BUTTONS ══ */
+      .btn {
+        padding: 0.55rem 1.2rem;
+        border-radius: 6px;
+        font-family: "Inter", sans-serif;
+        font-size: 0.88rem;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1px solid transparent;
+        transition: all 0.2s;
+        letter-spacing: 0.02em;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+      }
+      .btn-primary {
+        background: linear-gradient(135deg, #7a5c00, #b8860b);
+        color: #0d0b0e;
+      }
+      .btn-primary:hover {
+        opacity: 0.88;
+        transform: translateY(-1px);
+      }
+      .btn-secondary {
+        background: transparent;
+        border-color: var(--border);
+        color: var(--text-muted);
+      }
+      .btn-secondary:hover {
+        border-color: var(--border-hover);
+        color: var(--text);
+      }
+      .btn-outline {
+        background: transparent;
+        border: 1px solid rgba(184, 134, 11, 0.4);
+        color: var(--text-muted);
+      }
+      .btn-outline:hover {
+        border-color: var(--border-hover);
+        color: var(--text);
+        background: rgba(184, 134, 11, 0.08);
+      }
+      .btn-sm {
+        padding: 0.3rem 0.65rem;
+        font-size: 0.78rem;
+      }
+
+      /* ══ TABLA ══ */
+      .table-wrap {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      }
+      .table-scroll {
+        overflow-x: auto;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 860px;
+      }
+      thead {
+        background: rgba(184, 134, 11, 0.1);
+      }
+      thead th {
+        padding: 0.85rem 1rem;
+        text-align: left;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: var(--text-muted);
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
+        font-weight: 700;
+      }
+      tbody tr {
+        border-bottom: 1px solid var(--border);
+        transition: background 0.15s;
+      }
+      tbody tr:last-child {
+        border-bottom: none;
+      }
+      tbody tr:hover td {
+        background-color: rgba(184, 134, 11, 0.04);
+      }
+      tbody td {
+        padding: 0.75rem 1rem;
+        font-size: 0.88rem;
+        color: var(--text);
+        vertical-align: middle;
+      }
+
+      /* Badges */
+      .badge {
+        display: inline-block;
+        padding: 0.25rem 0.7rem;
+        border-radius: 20px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        white-space: nowrap;
+      }
+      .badge-pendiente {
+        background: rgba(184, 134, 11, 0.15);
+        color: rgba(184, 134, 11, 0.9);
+        border: 1px solid rgba(184, 134, 11, 0.4);
+      }
+      .badge-confirmada {
+        background: rgba(52, 152, 219, 0.15);
+        color: #3498db;
+        border: 1px solid rgba(52, 152, 219, 0.4);
+      }
+      .badge-completada {
+        background: rgba(30, 126, 52, 0.2);
+        color: #6fcf97;
+        border: 1px solid rgba(30, 126, 52, 0.4);
+      }
+      .badge-cancelada {
+        background: rgba(192, 57, 43, 0.15);
+        color: #eb5757;
+        border: 1px solid rgba(192, 57, 43, 0.4);
+      }
+
+      .action-group {
+        display: flex;
+        gap: 0.4rem;
+        flex-wrap: wrap;
+      }
+
+      /* ══ PAGINACIÓN ══ */
+      .pagination {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 1.2rem;
+        border-top: 1px solid var(--border);
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+      .pagination-info {
+        font-size: 0.8rem;
+        color: var(--text-soft);
+      }
+      .pagination-btns {
+        display: flex;
+        gap: 0.4rem;
+        flex-wrap: wrap;
+      }
+      .page-btn {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--border);
+        color: var(--text-muted);
+        border-radius: 6px;
+        padding: 0.35rem 0.7rem;
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .page-btn:hover,
+      .page-btn.active {
+        border-color: rgba(184, 134, 11, 0.6);
+        color: var(--text);
+        background: rgba(184, 134, 11, 0.1);
+      }
+      .page-btn:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+      }
+
+      /* ══ MODAL EDITAR ══ */
+      .modal-backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 200;
+        background: rgba(0, 0, 0, 0.78);
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        animation: fadeIn 0.2s ease;
+      }
+      .modal-backdrop.open {
+        display: flex;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .modal-box {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        width: min(580px, 95vw);
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+        position: relative;
+      }
+      .modal-box::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(184, 134, 11, 0.6),
+          transparent
+        );
+        border-radius: var(--radius) var(--radius) 0 0;
+      }
+      .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.25rem 1.5rem 1rem;
+        border-bottom: 1px solid var(--border);
+      }
+      .modal-header h2 {
+        font-family: "Playfair Display", serif;
+        font-size: 1.25rem;
+        color: var(--gold-light);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .modal-close {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--text-muted);
+        line-height: 1;
+        transition: color 0.2s;
+      }
+      .modal-close:hover {
+        color: var(--text);
+      }
+      .modal-body {
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .modal-footer {
+        padding: 1rem 1.5rem;
+        border-top: 1px solid var(--border);
+        display: flex;
+        gap: 0.7rem;
+        justify-content: flex-end;
+      }
+
+      .section-label {
+        font-size: 0.7rem;
+        color: rgba(184, 134, 11, 0.9);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-weight: 700;
+        margin-bottom: 0.6rem;
+      }
+      .info-card {
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 0.9rem 1rem;
+      }
+      .info-card-row {
+        display: flex;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+      }
+      .info-field .lbl {
+        font-size: 0.7rem;
+        color: var(--text-soft);
+        margin-bottom: 0.15rem;
+      }
+      .info-field .val {
+        font-size: 0.9rem;
+        color: var(--text);
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+      }
+      .form-group label {
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .form-input,
+      .form-select {
+        width: 100%;
+        padding: 0.6rem 0.85rem;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--border);
+        border-radius: 7px;
+        color: var(--text);
+        font-family: "Inter", sans-serif;
+        font-size: 0.9rem;
+        outline: none;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+      }
+      .form-input:focus,
+      .form-select:focus {
+        border-color: rgba(184, 134, 11, 0.6);
+        box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.1);
+      }
+      .form-select option {
+        background: var(--surface);
+        color: var(--text);
+      }
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+
+      /* Foto upload */
+      .foto-upload-area {
+        border: 2px dashed var(--border);
+        border-radius: 10px;
+        padding: 1.2rem;
+        text-align: center;
+        cursor: pointer;
+        transition: border-color 0.2s;
+      }
+      .foto-upload-area:hover {
+        border-color: rgba(184, 134, 11, 0.5);
+      }
+      .foto-upload-area input {
+        display: none;
+      }
+      .foto-preview {
+        max-width: 100%;
+        max-height: 200px;
+        border-radius: 8px;
+        object-fit: contain;
+        margin-top: 0.8rem;
+        display: none;
+      }
+      .upload-label {
+        color: var(--text-soft);
+        font-size: 0.85rem;
+      }
+      .upload-label span {
+        color: rgba(184, 134, 11, 0.9);
+      }
+
+      /* ══ MODAL FOTO ══ */
+      .foto-modal-backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 300;
+        background: rgba(0, 0, 0, 0.92);
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .foto-modal-backdrop.open {
+        display: flex;
+      }
+      .foto-modal-img {
+        max-width: 90vw;
+        max-height: 80vh;
+        border-radius: 10px;
+        border: 2px solid var(--border);
+        object-fit: contain;
+      }
+      .foto-modal-close {
+        background: linear-gradient(135deg, #7a5c00, #b8860b);
+        color: #0d0b0e;
+        border: none;
+        border-radius: 6px;
+        padding: 0.5rem 1.5rem;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .foto-modal-title {
+        color: var(--gold-light);
+        font-size: 0.9rem;
+        font-family: "Playfair Display", serif;
+      }
+
+      /* ══ SPINNER ══ */
+      .spinner {
+        width: 20px;
+        height: 20px;
+        border: 3px solid var(--surface-2);
+        border-top-color: rgba(184, 134, 11, 0.8);
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 0.5rem;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .loading-row td {
+        text-align: center;
+        padding: 3rem;
+        color: var(--text-soft);
+      }
+
+      /* ══ FOOTER ══ */
+      .footer {
+        background-color: var(--surface);
+        border-top: 1px solid var(--border);
+        padding: 1.8rem 1.5rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.8rem;
+        justify-content: space-between;
+      }
+      .text-link-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        min-width: 140px;
+      }
+      .text-strong {
+        font-family: "Playfair Display", serif;
+        font-size: 1.4rem;
+        color: var(--gold-light);
+      }
+      .text-link-list-item {
+        margin-bottom: 0.3rem;
+      }
+      .list-item,
+      .list-item-2,
+      .list-item-7,
+      .list-item-11,
+      .list-item-12,
+      .list-item-13 {
+        color: var(--text-muted);
+        text-decoration: none;
+        font-size: 0.88rem;
+        transition: color 0.2s;
+      }
+      .list-item:hover,
+      .list-item-2:hover,
+      .list-item-7:hover,
+      .list-item-13:hover {
+        color: var(--gold-light);
+        text-decoration: underline;
+      }
+      /* ══ BREADCRUMB ══ */
+      .breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.8rem;
+        color: var(--text-soft);
+        margin-bottom: 0.75rem;
+        flex-wrap: wrap;
+      }
+      .breadcrumb a {
+        color: rgba(184, 134, 11, 0.85);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .breadcrumb a:hover {
+        color: rgba(184, 134, 11, 1);
+        text-decoration: underline;
+      }
+      .breadcrumb .sep {
+        color: var(--text-soft);
+        opacity: 0.5;
+      }
+      .breadcrumb .current {
+        color: var(--text-muted);
+      }
+
+      /* ══ PAGE TOP ROW ══ */
+      .page-top-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+      }
+      .page-top-row .page-title {
+        margin-bottom: 0;
+      }
+
+      /* ══ RESPONSIVE ══ */
+      @media (max-width: 768px) {
+        .header {
+          padding: 0.85rem 1rem;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 0.75rem;
+        }
+        .imagen-de-barberia {
+          width: 48px;
+          height: 48px;
+          border-radius: 12px;
+        }
+        .navigation-pill-list {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 6px;
+          width: 100%;
+        }
+        .navigation-pill {
+          font-size: 0.78rem;
+          padding: 0.5rem 0.3rem;
+          text-align: center;
+          justify-content: center;
+          display: flex;
+          align-items: center;
+          border-radius: 8px;
+        }
+        .main-content {
+          padding: 1.5rem 1rem 2.5rem;
+        }
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+        .toolbar {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .footer {
+          flex-direction: column;
+          gap: 1.5rem;
+        }
+      }
+      @media (max-width: 400px) {
+        .navigation-pill-list {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .navigation-pill {
+          font-size: 0.72rem;
+          padding: 0.45rem 0.25rem;
+        }
+        .modal-box {
+          max-height: 95vh;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ===== HEADER ===== -->
+    <header class="header">
+      <div>
+        <img
+          class="imagen-de-barberia"
+          src="/images/titanicon.jpeg"
+          alt="Logo"
+        />
+      </div>
+      <nav class="navigation-pill-list" aria-label="Navegación principal">
+        <a href="/perfil" class="navigation-pill">Mi Perfil</a>
+        <a href="/homebarber" class="navigation-pill">Inicio</a>
+        <a href="/barber_agenda" class="navigation-pill">Agenda</a>
+        <a href="/notibarbero" class="navigation-pill">Notificaciones</a>
+        <a href="/panel" class="navigation-pill active">Panel de Control</a>
+        <a href="/" class="navigation-pill">Cerrar Sesión</a>
+      </nav>
+    </header>
+
+    <!-- ===== MAIN ===== -->
+    <main class="main-content">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/panel">Panel</a>
+        <span class="sep">/</span>
+        <span class="current">Citas</span>
+      </nav>
+
+      <!-- Title row + back button -->
+      <div class="page-top-row">
+        <div class="page-title">Historial de Citas</div>
+        <a href="/panel" class="btn btn-secondary">← Volver</a>
+      </div>
+      <!-- Stats -->
+      <div class="stats-bar">
+        <div class="stat-card">
+          <div class="num" id="stat-hoy">0</div>
+          <div class="lbl">Citas del día</div>
+        </div>
+        <div class="stat-card verde">
+          <div class="num" id="stat-completadas">0</div>
+          <div class="lbl">Completadas</div>
+        </div>
+        <div class="stat-card azul">
+          <div class="num" id="stat-confirmadas">0</div>
+          <div class="lbl">Confirmadas</div>
+        </div>
+        <div class="stat-card">
+          <div class="num" id="stat-pendientes">0</div>
+          <div class="lbl">Pendientes</div>
+        </div>
+        <div class="stat-card rojo">
+          <div class="num" id="stat-canceladas">0</div>
+          <div class="lbl">Canceladas</div>
+        </div>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="toolbar">
+        <div class="search-wrap">
+          <span class="ico">🔍</span>
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Buscar por ID cita, nombre o ID cliente..."
+          />
+        </div>
+        <select class="filter-select" id="filter-estado">
+          <option value="">Todos los estados</option>
+          <option value="pendiente">Pendiente</option>
+          <option value="confirmada">Confirmada</option>
+          <option value="completada">Completada</option>
+          <option value="cancelada">Cancelada</option>
+        </select>
+        <select class="filter-select" id="filter-fecha">
+          <option value="">Todas las fechas</option>
+          <option value="hoy">Hoy</option>
+          <option value="semana">Esta semana</option>
+          <option value="mes">Este mes</option>
+        </select>
+        <button class="btn btn-secondary" onclick="cargarCitas()">
+          ↻ Actualizar
+        </button>
+      </div>
+
+      <!-- Tabla -->
+      <div class="table-wrap">
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Cliente</th>
+                <th>Contacto</th>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Estado</th>
+                <th>Ref.</th>
+                <th>Evidencia</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tabla-body">
+              <tr class="loading-row">
+                <td colspan="12">
+                  <span class="spinner"></span> Cargando citas...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pagination">
+          <div class="pagination-info" id="pag-info">—</div>
+          <div class="pagination-btns" id="pag-btns"></div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ===== MODAL EDITAR ===== -->
+    <div class="modal-backdrop" id="modal-editar">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h2>
+            Editar Cita
+            <span
+              id="edit-id-label"
+              style="
+                color: var(--text-soft);
+                font-size: 0.85rem;
+                font-family: Inter, sans-serif;
+                font-weight: 400;
+              "
+            ></span>
+          </h2>
+          <button class="modal-close" onclick="cerrarModalEditar()">×</button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="edit-id-cita" />
+
+          <!-- Info cliente (solo lectura) -->
+          <div>
+            <div class="section-label">Cliente</div>
+            <div class="info-card">
+              <div class="info-card-row">
+                <div class="info-field">
+                  <div class="lbl">Nombre</div>
+                  <div class="val" id="edit-cliente-nombre">—</div>
+                </div>
+                <div class="info-field">
+                  <div class="lbl">Teléfono</div>
+                  <div class="val" id="edit-cliente-tel">—</div>
+                </div>
+                <div class="info-field">
+                  <div class="lbl">Email</div>
+                  <div class="val" id="edit-cliente-email">—</div>
+                </div>
+                <div class="info-field">
+                  <div class="lbl">Barbero</div>
+                  <div class="val" id="edit-barbero-nombre">—</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Campos editables -->
+          <div>
+            <div class="section-label">Datos de la cita</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Estado</label>
+                <select class="form-select" id="edit-estado">
+                  <option value="pendiente">Pendiente</option>
+                  <option value="confirmada">Confirmada</option>
+                  <option value="completada">Completada</option>
+                  <option value="cancelada">Cancelada</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Precio estimado</label>
+                <input
+                  type="number"
+                  class="form-input"
+                  id="edit-precio"
+                  min="0"
+                  step="0.01"
+                />
+              </div>
+              <div class="form-group">
+                <label>Servicio</label>
+                <select class="form-select" id="edit-servicio"></select>
+              </div>
+              <div class="form-group">
+                <label>Fecha</label>
+                <input type="date" class="form-input" id="edit-fecha" />
+              </div>
+              <div class="form-group">
+                <label>Hora</label>
+                <input type="time" class="form-input" id="edit-hora" />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Notas / Descripción del diseño</label>
+            <textarea
+              class="form-input"
+              id="edit-notas"
+              rows="3"
+              style="resize: vertical"
+            ></textarea>
+          </div>
+
+          <!-- Foto evidencia -->
+          <div>
+            <div class="section-label">Foto de evidencia del corte</div>
+            <div
+              class="foto-upload-area"
+              onclick="document.getElementById('edit-foto-input').click()"
+            >
+              <input
+                type="file"
+                id="edit-foto-input"
+                accept="image/*"
+                onchange="previsualizarFoto(this)"
+              />
+              <div class="upload-label">
+                Haz clic para subir una foto <span>(JPG, PNG, WEBP)</span>
+              </div>
+              <img id="edit-foto-preview" class="foto-preview" alt="Preview" />
+            </div>
+            <div id="foto-evidencia-actual" style="margin-top: 0.5rem"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" onclick="cerrarModalEditar()">
+            Cancelar
+          </button>
+          <button class="btn btn-primary" onclick="guardarEdicion()">
+            💾 Guardar cambios
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== MODAL VER FOTO ===== -->
+    <div class="foto-modal-backdrop" id="modal-foto">
+      <div class="foto-modal-title" id="foto-modal-titulo">Foto</div>
+      <img class="foto-modal-img" id="foto-modal-img" src="" alt="Foto" />
+      <button class="foto-modal-close" onclick="cerrarModalFoto()">
+        ✕ Cerrar
+      </button>
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+      <div>
+        <img
+          class="imagen-de-barberia"
+          src="/images/titanicon.jpeg"
+          alt="Logo"
+        />
+      </div>
+      <nav class="text-link-list">
+        <h2 class="text-strong">contacto</h2>
+        <ul style="list-style: none">
+          <li class="text-link-list-item">
+            <a href="tel:9837324637" class="list-item">9837324637</a>
+          </li>
+          <li class="text-link-list-item">
+            <a href="mailto:barberpi@utttn.mx" class="list-item-2"
+              >barberpi@utttn.mx</a
+            >
+          </li>
+        </ul>
+      </nav>
+      <nav class="text-link-list">
+        <h2 class="text-strong">ubicación</h2>
+        <ul style="list-style: none">
+          <li class="text-link-list-item">
+            <a
+              href="https://maps.app.goo.gl/ZD5gur5vPiwKMVCW9"
+              target="_blank"
+              class="list-item-7"
+              >Google Maps</a
+            >
+          </li>
+        </ul>
+      </nav>
+      <nav class="text-link-list">
+        <h2 class="text-strong">creado por:</h2>
+        <ul style="list-style: none">
+          <li class="text-link-list-item">
+            <span class="list-item-11">Axel Rivera</span>
+          </li>
+          <li class="text-link-list-item">
+            <a href="mailto:axel.delgado@uttn.mx" class="list-item-13"
+              >axel.delgado@uttn.mx</a
+            >
+          </li>
+          <li class="text-link-list-item">
+            <a href="tel:8994287620" class="list-item">8994287620</a>
+          </li>
+        </ul>
+      </nav>
+    </footer>
+
+    <div id="app-notify-root">
+      <div id="app-toast-container" class="toast-container"></div>
+      <div id="app-modal-container"></div>
+    </div>
+
+    <script>
+      /* ===== NOTIFY ===== */
+      (function () {
+        const tc = document.getElementById("app-toast-container");
+        const mc = document.getElementById("app-modal-container");
+        window.showToast = function (text = "", type = "info", timeout = 3500) {
+          return new Promise((resolve) => {
+            const w = document.createElement("div");
+            w.className = `app-toast ${type}`;
+            w.innerHTML = `<div class="msg">${text}</div><button class="close-btn">×</button>`;
+            w.querySelector(".close-btn").addEventListener("click", () =>
+              remove(),
+            );
+            tc.appendChild(w);
+            let done = false;
+            const remove = () => {
+              if (done) return;
+              done = true;
+              w.style.opacity = "0";
+              setTimeout(() => {
+                try {
+                  tc.removeChild(w);
+                } catch (e) {}
+                resolve();
+              }, 180);
+            };
+            setTimeout(remove, timeout);
+          });
+        };
+        window.showConfirm = function (title = "", message = "") {
+          return new Promise((resolve) => {
+            const b = document.createElement("div");
+            b.className = "app-modal-backdrop";
+            b.innerHTML = `<div class="app-modal" role="dialog"><h3>${title}</h3><p>${message}</p>
+              <div class="row">
+                <button class="app-btn ghost" id="cc">Cancelar</button>
+                <button class="app-btn primary" id="oo">Aceptar</button>
+              </div></div>`;
+            mc.appendChild(b);
+            let done = false;
+            const cleanup = (v) => {
+              if (done) return;
+              done = true;
+              b.style.opacity = "0";
+              setTimeout(() => {
+                try {
+                  mc.removeChild(b);
+                } catch (e) {}
+                resolve(v);
+              }, 180);
+            };
+            b.querySelector("#oo").addEventListener("click", () =>
+              cleanup(true),
+            );
+            b.querySelector("#cc").addEventListener("click", () =>
+              cleanup(false),
+            );
+            b.addEventListener("click", (e) => {
+              if (e.target === b) cleanup(false);
+            });
+            document.addEventListener("keydown", function esc(e) {
+              if (e.key === "Escape") {
+                cleanup(false);
+                document.removeEventListener("keydown", esc);
+              }
+            });
+          });
+        };
+      })();
+
+      /* ===== CONFIG ===== */
+      const API_BASE =
+        window.location.hostname.includes("localhost") ||
+        window.location.hostname === "127.0.0.1"
+          ? "http://localhost:4000/api"
+          : `${window.location.origin}/api`;
+
+      const getToken = () => localStorage.getItem("token");
+      const getRol = () => localStorage.getItem("rol");
+
+      let todasLasCitas = [];
+      let citasFiltradas = [];
+      let paginaActual = 1;
+      const POR_PAGINA = 15;
+      let serviciosDisponibles = [];
+
+      /* ===== INIT ===== */
+      document.addEventListener("DOMContentLoaded", async () => {
+        const rol = getRol();
+        if (rol !== "admin") {
+          await showToast("Acceso denegado", "error", 2000);
+          setTimeout(() => (window.location.href = "/"), 2000);
+          return;
+        }
+        await Promise.all([cargarServicios(), cargarCitas()]);
+        setupBusqueda();
+      });
+
+      /* ===== SERVICIOS ===== */
+      async function cargarServicios() {
+        try {
+          const r = await fetch(`${API_BASE}/servicios`, {
+            headers: { Authorization: `Bearer ${getToken()}` },
+          });
+          if (!r.ok) return;
+          serviciosDisponibles = await r.json();
+          const sel = document.getElementById("edit-servicio");
+          sel.innerHTML = serviciosDisponibles
+            .map((s) => `<option value="${s.id_servicio}">${s.nombre}</option>`)
+            .join("");
+        } catch (e) {
+          console.error("Error servicios:", e);
+        }
+      }
+
+      /* ===== CITAS ===== */
+      async function cargarCitas() {
+        const tbody = document.getElementById("tabla-body");
+        tbody.innerHTML = `<tr class="loading-row"><td colspan="12"><span class="spinner"></span> Cargando...</td></tr>`;
+        try {
+          const r = await fetch(`${API_BASE}/admin/citas`, {
+            headers: { Authorization: `Bearer ${getToken()}` },
+          });
+          if (!r.ok) {
+            tbody.innerHTML = `<tr class="loading-row"><td colspan="12">Error al cargar citas</td></tr>`;
+            return;
+          }
+          todasLasCitas = await r.json();
+          actualizarStats();
+          aplicarFiltros();
+        } catch (e) {
+          tbody.innerHTML = `<tr class="loading-row"><td colspan="12">Error de conexión</td></tr>`;
+        }
+      }
+
+      /* ===== STATS =====
+       * Backend devuelve: cliente_nombre, servicio_nombre, tiene_evidencia, tiene_referencia
+       */
+      function actualizarStats() {
+        const hoy = new Date().toISOString().slice(0, 10);
+        document.getElementById("stat-hoy").textContent = todasLasCitas.filter(
+          (c) => (c.fecha || "").slice(0, 10) === hoy,
+        ).length;
+        document.getElementById("stat-completadas").textContent =
+          todasLasCitas.filter((c) => c.estado === "completada").length;
+        document.getElementById("stat-confirmadas").textContent =
+          todasLasCitas.filter((c) => c.estado === "confirmada").length;
+        document.getElementById("stat-pendientes").textContent =
+          todasLasCitas.filter((c) => c.estado === "pendiente").length;
+        document.getElementById("stat-canceladas").textContent =
+          todasLasCitas.filter((c) => c.estado === "cancelada").length;
+      }
+
+      function setupBusqueda() {
+        document
+          .getElementById("search-input")
+          .addEventListener("input", aplicarFiltros);
+        document
+          .getElementById("filter-estado")
+          .addEventListener("change", aplicarFiltros);
+        document
+          .getElementById("filter-fecha")
+          .addEventListener("change", aplicarFiltros);
+      }
+
+      function aplicarFiltros() {
+        const q = document
+          .getElementById("search-input")
+          .value.toLowerCase()
+          .trim();
+        const estado = document.getElementById("filter-estado").value;
+        const fecha = document.getElementById("filter-fecha").value;
+        const hoy = new Date();
+        hoy.setHours(0, 0, 0, 0);
+
+        citasFiltradas = todasLasCitas.filter((c) => {
+          // Búsqueda — usa los alias correctos del backend
+          if (q) {
+            const match =
+              String(c.id_cita).includes(q) ||
+              (c.cliente_nombre || "").toLowerCase().includes(q) ||
+              String(c.id_usuario).includes(q);
+            if (!match) return false;
+          }
+          if (estado && c.estado !== estado) return false;
+          if (fecha) {
+            const fc = new Date(c.fecha);
+            fc.setHours(0, 0, 0, 0);
+            if (fecha === "hoy" && fc.getTime() !== hoy.getTime()) return false;
+            if (fecha === "semana") {
+              const lunes = new Date(hoy);
+              lunes.setDate(hoy.getDate() - hoy.getDay() + 1);
+              const domingo = new Date(lunes);
+              domingo.setDate(lunes.getDate() + 6);
+              if (fc < lunes || fc > domingo) return false;
+            }
+            if (fecha === "mes") {
+              if (
+                fc.getMonth() !== hoy.getMonth() ||
+                fc.getFullYear() !== hoy.getFullYear()
+              )
+                return false;
+            }
+          }
+          return true;
+        });
+        paginaActual = 1;
+        renderTabla();
+      }
+
+      function renderTabla() {
+        const tbody = document.getElementById("tabla-body");
+        const total = citasFiltradas.length;
+        const totalPags = Math.ceil(total / POR_PAGINA) || 1;
+        const inicio = (paginaActual - 1) * POR_PAGINA;
+        const fin = Math.min(inicio + POR_PAGINA, total);
+        const pagina = citasFiltradas.slice(inicio, fin);
+
+        if (!pagina.length) {
+          tbody.innerHTML = `<tr class="loading-row"><td colspan="12" style="color:var(--text-soft);">Sin resultados</td></tr>`;
+          document.getElementById("pag-info").textContent = "Sin resultados";
+          document.getElementById("pag-btns").innerHTML = "";
+          return;
+        }
+
+        tbody.innerHTML = pagina
+          .map((c) => {
+            // ── Campos con los alias correctos del backend ──
+            const nombre = c.cliente_nombre || "—";
+            const telefono = c.cliente_telefono || "";
+            const email = c.cliente_email || "";
+            const servicio = c.servicio_nombre || "—";
+            const barbero = c.barbero_nombre || "—";
+            const fecha = (c.fecha || "").slice(0, 10) || "—";
+            const hora = (c.hora || "").slice(0, 5) || "—";
+            const precio =
+              c.precio_estimado != null
+                ? `$${parseFloat(c.precio_estimado).toFixed(2)}`
+                : "—";
+            const notas = c.notas
+              ? c.notas.length > 30
+                ? c.notas.slice(0, 30) + "…"
+                : c.notas
+              : "—";
+
+            // tiene_evidencia / tiene_referencia son 1/0 desde el backend
+            const fotoRef = c.tiene_referencia
+              ? `<button class="btn btn-outline btn-sm" onclick="verFoto(${c.id_cita},'ref')">Ver</button>`
+              : `<span style="color:var(--text-soft);">—</span>`;
+            const fotoEvi = c.tiene_evidencia
+              ? `<button class="btn btn-outline btn-sm" onclick="verFoto(${c.id_cita},'evi')">Ver</button>`
+              : `<span style="color:var(--text-soft);">—</span>`;
+
+            return `<tr>
+            <td><strong style="color:rgba(184,134,11,0.9);">#${c.id_cita}</strong></td>
+            <td>
+              <div style="font-weight:600;">${nombre}</div>
+              <div style="font-size:.75rem;color:var(--text-soft);">ID: ${c.id_usuario} · ${barbero}</div>
+            </td>
+            <td>
+              <div style="font-size:.82rem;">
+                ${telefono ? `<a href="tel:${telefono}" style="color:rgba(184,134,11,0.9);">${telefono}</a>` : "—"}
+              </div>
+              <div style="font-size:.75rem;color:var(--text-soft);">${email}</div>
+            </td>
+            <td>${fecha}</td>
+            <td>${hora}</td>
+            <td><span class="badge badge-${c.estado || "pendiente"}">${c.estado || "—"}</span></td>
+            <td>${fotoRef}</td>
+            <td>${fotoEvi}</td>
+            <td>
+              <div class="action-group">
+                <button class="btn btn-outline btn-sm" onclick="abrirEditar(${c.id_cita})">Editar</button>
+                <a href="/admin/cliente/${c.id_usuario}" class="btn btn-primary btn-sm">Perfil</a>
+              </div>
+            </td>
+          </tr>`;
+          })
+          .join("");
+
+        document.getElementById("pag-info").textContent =
+          `Mostrando ${inicio + 1}–${fin} de ${total} citas`;
+
+        const btns = document.getElementById("pag-btns");
+        btns.innerHTML = "";
+        const addBtn = (label, page, disabled = false) => {
+          const b = document.createElement("button");
+          b.className = "page-btn" + (page === paginaActual ? " active" : "");
+          b.textContent = label;
+          b.disabled = disabled;
+          b.addEventListener("click", () => {
+            paginaActual = page;
+            renderTabla();
+          });
+          btns.appendChild(b);
+        };
+        addBtn("←", paginaActual - 1, paginaActual === 1);
+        for (let i = 1; i <= totalPags; i++) {
+          if (
+            totalPags <= 7 ||
+            Math.abs(i - paginaActual) <= 2 ||
+            i === 1 ||
+            i === totalPags
+          )
+            addBtn(i, i);
+        }
+        addBtn("→", paginaActual + 1, paginaActual === totalPags);
+      }
+
+      /* ===== VER FOTO ===== */
+      async function verFoto(id_cita, tipo) {
+        const modal = document.getElementById("modal-foto");
+        const img = document.getElementById("foto-modal-img");
+        const titulo = document.getElementById("foto-modal-titulo");
+        img.src = "";
+        titulo.textContent =
+          tipo === "ref" ? "Foto de referencia" : "Foto de evidencia del corte";
+        modal.classList.add("open");
+        const endpoint =
+          tipo === "ref"
+            ? `${API_BASE}/citas/${id_cita}/referencia-foto`
+            : `${API_BASE}/citas/${id_cita}/evidencia-foto`;
+        try {
+          const r = await fetch(endpoint, {
+            headers: { Authorization: `Bearer ${getToken()}` },
+          });
+          if (!r.ok) {
+            await showToast("No se pudo cargar la foto", "error");
+            cerrarModalFoto();
+            return;
+          }
+          img.src = URL.createObjectURL(await r.blob());
+        } catch (e) {
+          await showToast("Error al cargar la foto", "error");
+          cerrarModalFoto();
+        }
+      }
+      function cerrarModalFoto() {
+        document.getElementById("modal-foto").classList.remove("open");
+        document.getElementById("foto-modal-img").src = "";
+      }
+
+      /* ===== MODAL EDITAR ===== */
+      async function abrirEditar(id_cita) {
+        const cita = todasLasCitas.find((c) => c.id_cita === id_cita);
+        if (!cita) return;
+
+        document.getElementById("edit-id-cita").value = id_cita;
+        document.getElementById("edit-id-label").textContent = `#${id_cita}`;
+
+        // Alias correctos del backend
+        document.getElementById("edit-cliente-nombre").textContent =
+          cita.cliente_nombre || "—";
+        document.getElementById("edit-cliente-tel").textContent =
+          cita.cliente_telefono || "—";
+        document.getElementById("edit-cliente-email").textContent =
+          cita.cliente_email || "—";
+        document.getElementById("edit-barbero-nombre").textContent =
+          cita.barbero_nombre || "—";
+
+        document.getElementById("edit-estado").value =
+          cita.estado || "pendiente";
+        document.getElementById("edit-precio").value =
+          cita.precio_estimado ?? "";
+        document.getElementById("edit-fecha").value = (cita.fecha || "").slice(
+          0,
+          10,
+        );
+        document.getElementById("edit-hora").value = (cita.hora || "").slice(
+          0,
+          5,
+        );
+        document.getElementById("edit-notas").value = cita.notas || "";
+        document.getElementById("edit-servicio").value = cita.servicio || "";
+
+        document.getElementById("edit-foto-preview").style.display = "none";
+        document.getElementById("edit-foto-preview").src = "";
+        document.getElementById("edit-foto-input").value = "";
+
+        const fotoDiv = document.getElementById("foto-evidencia-actual");
+        fotoDiv.innerHTML = cita.tiene_evidencia
+          ? `<button class="btn btn-outline btn-sm" onclick="verFoto(${id_cita},'evi')">Ver foto de evidencia actual</button>`
+          : `<span style="color:var(--text-soft);font-size:.8rem;">Sin foto de evidencia aún</span>`;
+
+        document.getElementById("modal-editar").classList.add("open");
+      }
+
+      function cerrarModalEditar() {
+        document.getElementById("modal-editar").classList.remove("open");
+      }
+
+      function previsualizarFoto(input) {
+        const file = input.files[0];
+        if (!file) return;
+        const preview = document.getElementById("edit-foto-preview");
+        preview.src = URL.createObjectURL(file);
+        preview.style.display = "block";
+      }
+
+      async function guardarEdicion() {
+        const id_cita = document.getElementById("edit-id-cita").value;
+        const estado = document.getElementById("edit-estado").value;
+        const precio = document.getElementById("edit-precio").value;
+        const servicio = document.getElementById("edit-servicio").value;
+        const fecha = document.getElementById("edit-fecha").value;
+        const hora = document.getElementById("edit-hora").value;
+        const notas = document.getElementById("edit-notas").value;
+        const fotoFile = document.getElementById("edit-foto-input").files[0];
+
+        try {
+          const r = await fetch(`${API_BASE}/admin/citas/${id_cita}`, {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${getToken()}`,
+            },
+            body: JSON.stringify({
+              estado,
+              precio_estimado: precio ? parseFloat(precio) : null,
+              servicio: servicio ? parseInt(servicio) : null,
+              fecha: fecha || null,
+              hora: hora || null,
+              notas: notas || null,
+            }),
+          });
+          if (!r.ok) {
+            const e = await r.json().catch(() => ({}));
+            await showToast(e.error || "Error al guardar", "error");
+            return;
+          }
+          if (fotoFile) {
+            const fd = new FormData();
+            fd.append("foto", fotoFile);
+            const rf = await fetch(
+              `${API_BASE}/citas/${id_cita}/evidencia-foto`,
+              {
+                method: "POST",
+                headers: { Authorization: `Bearer ${getToken()}` },
+                body: fd,
+              },
+            );
+            if (!rf.ok)
+              await showToast(
+                "Cita guardada pero error al subir foto",
+                "warning",
+              );
+          }
+          await showToast("Cita actualizada correctamente", "success", 2000);
+          cerrarModalEditar();
+          cargarCitas();
+        } catch (e) {
+          await showToast("Error de conexión", "error");
+        }
+      }
+
+      /* ===== ESC / CLICK FUERA ===== */
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          cerrarModalEditar();
+          cerrarModalFoto();
+        }
+      });
+      document.getElementById("modal-editar").addEventListener("click", (e) => {
+        if (e.target === document.getElementById("modal-editar"))
+          cerrarModalEditar();
+      });
+      document.getElementById("modal-foto").addEventListener("click", (e) => {
+        if (e.target === document.getElementById("modal-foto"))
+          cerrarModalFoto();
+      });
+    </script>
+  </body>
+</html>

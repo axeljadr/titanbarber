@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Barber Studio - Notificaciones</title>
+    <link rel="stylesheet" href="/static/notificacion.css" />
+    <link rel="stylesheet" href="/static/alerts.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="block">
+        <img
+          class="imagen-de-barberia"
+          src="/images/titanicon.jpeg"
+          alt="Logo Barber"
+        />
+      </div>
+      <nav class="navigation-pill-list" aria-label="Navegación principal">
+        <a href="/perfil" class="navigation-pill">
+          <span class="title">Mi Perfil</span>
+        </a>
+        <a href="/home" class="navigation-pill">
+          <span class="title">Inicio</span>
+        </a>
+        <a href="/agendar" class="navigation-pill">
+          <span class="">Agendar Cita</span>
+        </a>
+        <a href="/notificacion" class="navigation-pill">
+          <span class="title">Notificaciones</span>
+        </a>
+        <a href="/" class="navigation-pill" id="logout-link">
+          <span class="title">Cerrar Sesión</span>
+        </a>
+      </nav>
+    </header>
+
+    <main class="main-content">
+      <h1>Mis notificaciones</h1>
+      <div class="notifications-container"></div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-logo">
+        <img
+          class="imagen-de-barberia"
+          src="/images/titanicon.jpeg"
+          alt="Logo Barber"
+        />
+      </div>
+      <nav class="text-link-list" aria-labelledby="footer-contact">
+        <div class="text-strong-wrapper">
+          <h2 id="footer-contact" class="text-strong">
+            <span class="text-strong-2">contacto</span>
+          </h2>
+        </div>
+        <ul class="footer-list">
+          <li class="text-link-list-item">
+            <a href="tel:9837324637" class="list-item">9837324637</a>
+          </li>
+          <li class="text-link-list-item">
+            <a href="mailto:barberpi@utttn.mx" class="list-item-2"
+              >barberpi@utttn.mx</a
+            >
+          </li>
+        </ul>
+      </nav>
+      <nav class="text-link-list" aria-labelledby="footer-location">
+        <div class="text-strong-wrapper">
+          <h2 id="footer-location" class="text-strong">
+            <span class="text-strong-2">ubicación</span>
+          </h2>
+        </div>
+        <ul class="footer-list">
+          <li class="text-link-list-item">
+            <a
+              href="https://maps.app.goo.gl/ZD5gur5vPiwKMVCW9?g_st=iw"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="list-item-7"
+              >google.maps/micasa</a
+            >
+          </li>
+        </ul>
+      </nav>
+      <nav class="text-link-list" aria-labelledby="footer-creator">
+        <div class="text-strong-wrapper">
+          <h2 id="footer-creator" class="text-strong">
+            <span class="">creado por:</span>
+          </h2>
+        </div>
+        <ul class="footer-list">
+          <li class="text-link-list-item">
+            <span class="list-item-11">Axel Rivera</span>
+          </li>
+          <li class="text-link-list-item">
+            <span class="list-item-12">contactos:</span>
+          </li>
+          <li class="text-link-list-item">
+            <a href="mailto:axel.delgado@uttn.mx" class="list-item-13"
+              >axel.delgado@uttn.mx</a
+            >
+          </li>
+          <li class="text-link-list-item">
+            <a href="tel:8994287620" class="list-item">8994287620</a>
+          </li>
+        </ul>
+      </nav>
+    </footer>
+
+    <div id="app-notify-root">
+      <div id="app-toast-container" class="toast-container"></div>
+      <div id="app-modal-container"></div>
+    </div>
+
+    <script>
+      (function notifyHelpers() {
+        const toastContainer = document.getElementById("app-toast-container");
+        const modalContainer = document.getElementById("app-modal-container");
+
+        window.showToast = function (text = "", type = "info", timeout = 3500) {
+          return new Promise((resolve) => {
+            if (!toastContainer) {
+              console.warn("Toast container missing:", text);
+              return resolve();
+            }
+            const wrap = document.createElement("div");
+            wrap.className = `app-toast ${type}`;
+            wrap.innerHTML = `<div class="msg">${text}</div><button class="close-btn" aria-label="close">&times;</button>`;
+            const closeBtn = wrap.querySelector(".close-btn");
+            let removed = false;
+            const cleanup = () => {
+              if (removed) return;
+              removed = true;
+              wrap.style.opacity = "0";
+              setTimeout(() => {
+                try {
+                  toastContainer.removeChild(wrap);
+                } catch (e) {}
+                resolve();
+              }, 180);
+            };
+            closeBtn.addEventListener("click", cleanup);
+            toastContainer.appendChild(wrap);
+            setTimeout(cleanup, timeout || 3500);
+          });
+        };
+
+        window.showConfirm = function (title = "Confirmar", message = "") {
+          return new Promise((resolve) => {
+            if (!modalContainer) {
+              console.warn("Modal container missing:", title, message);
+              return resolve(false);
+            }
+            const backdrop = document.createElement("div");
+            backdrop.className = "app-modal-backdrop";
+            backdrop.innerHTML = `
+              <div class="app-modal" role="dialog" aria-modal="true">
+                <h3>${title}</h3>
+                <p>${message}</p>
+                <div class="row">
+                  <button class="app-btn ghost" id="app-cancel-btn">Cancelar</button>
+                  <button class="app-btn primary" id="app-ok-btn">Aceptar</button>
+                </div>
+              </div>
+            `;
+            modalContainer.appendChild(backdrop);
+            const ok = backdrop.querySelector("#app-ok-btn");
+            const cancel = backdrop.querySelector("#app-cancel-btn");
+            const cleanup = (value) => {
+              try {
+                modalContainer.removeChild(backdrop);
+              } catch (e) {}
+              resolve(Boolean(value));
+            };
+            cancel.addEventListener("click", () => cleanup(false));
+            ok.addEventListener("click", () => cleanup(true));
+            backdrop.addEventListener("click", (ev) => {
+              if (ev.target === backdrop) cleanup(false);
+            });
+          });
+        };
+      })();
+
+      const API_BASE =
+        window.location.hostname.includes("localhost") ||
+        window.location.hostname === "127.0.0.1"
+          ? "http://localhost:4000/api"
+          : `${window.location.origin}/api`;
+
+      function getToken() {
+        return localStorage.getItem("token");
+      }
+
+      function getRol() {
+        return localStorage.getItem("rol");
+      }
+
+      function logout() {
+        localStorage.removeItem("token");
+        localStorage.removeItem("rol");
+        localStorage.removeItem("nombre");
+        window.location.href = "/";
+      }
+
+      document
+        .getElementById("logout-link")
+        .addEventListener("click", function (e) {
+          e.preventDefault();
+          logout();
+        });
+
+      function formatearFecha(fechaValor) {
+        if (!fechaValor) return "";
+
+        if (fechaValor instanceof Date) {
+          if (Number.isNaN(fechaValor.getTime())) return "";
+          return fechaValor.toLocaleDateString("es-ES", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          });
+        }
+
+        let str = String(fechaValor);
+
+        if (str.includes("T")) {
+          str = str.split("T")[0];
+        }
+
+        const partes = str.split("-");
+        if (partes.length === 3) {
+          const [y, m, d] = partes.map(Number);
+          if (!Number.isNaN(y) && !Number.isNaN(m) && !Number.isNaN(d)) {
+            const fechaLocal = new Date(y, m - 1, d);
+            if (!Number.isNaN(fechaLocal.getTime())) {
+              return fechaLocal.toLocaleDateString("es-ES", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              });
+            }
+          }
+        }
+
+        return str;
+      }
+
+      function formatearHora(horaStr) {
+        if (!horaStr) return "";
+        const [h, m] = horaStr.split(":");
+        const d = new Date();
+        d.setHours(parseInt(h, 10), parseInt(m, 10), 0, 0);
+        return d.toLocaleTimeString("es-ES", {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+      }
+
+      async function verificarSesionYRol() {
+        const token = getToken();
+        const rol = getRol();
+
+        if (!token) {
+          await showToast(
+            "Debes iniciar sesión para ver tus notificaciones.",
+            "info",
+            3000,
+          );
+          window.location.href = "/";
+          return false;
+        }
+
+        if (rol && rol !== "cliente") {
+          await showToast(
+            "Solo los clientes pueden ver esta página de notificaciones.",
+            "info",
+            3000,
+          );
+          window.location.href = "/home";
+          return false;
+        }
+
+        return true;
+      }
+
+      async function cargarNotificaciones() {
+        const ok = await verificarSesionYRol();
+        if (!ok) return;
+
+        const token = getToken();
+
+        try {
+          const resp = await fetch(`${API_BASE}/notificaciones-cliente`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (resp.status === 401 || resp.status === 403) {
+            await showToast(
+              "Sesión no válida. Inicia sesión de nuevo.",
+              "error",
+              3000,
+            );
+            logout();
+            return;
+          }
+
+          if (!resp.ok) {
+            const errData = await resp.json().catch(() => ({}));
+            console.error("Error backend:", errData);
+            await showToast("Error al obtener notificaciones.", "error", 3000);
+            return;
+          }
+
+          const notifs = await resp.json();
+          renderNotificaciones(notifs);
+        } catch (err) {
+          console.error("Error al cargar notificaciones:", err);
+          await showToast("Error de conexión con el servidor.", "error", 3000);
+        }
+      }
+
+      function renderNotificaciones(notifs) {
+        const container = document.querySelector(".notifications-container");
+        container.innerHTML = "";
+
+        if (!notifs || notifs.length === 0) {
+          const empty = document.createElement("p");
+          empty.textContent = "No tienes notificaciones pendientes.";
+          container.appendChild(empty);
+          return;
+        }
+
+        notifs.forEach((n) => {
+          if (n.tipo === "recordatorio_un_dia_antes") {
+            container.appendChild(crearCardRecordatorioUnDiaAntes(n));
+          } else if (n.tipo === "ultima_hace_mes") {
+            container.appendChild(crearCardUltimaHaceMes(n));
+          } else if (n.tipo === "proxima_cita") {
+            container.appendChild(crearCardProximaCita(n));
+          }
+        });
+      }
+
+      function crearCardRecordatorioUnDiaAntes(n) {
+        const card = document.createElement("div");
+        card.className = "notification-card";
+
+        const fecha = formatearFecha(n.fecha);
+        const hora = formatearHora(n.hora);
+
+        card.innerHTML = `
+          <h2 class="notification-title">Recordatorio de cita (mañana)</h2>
+          <p class="notification-message">
+            Tu siguiente cita es mañana (${fecha}) a las ${hora}. ¿Confirmas tu asistencia?
+          </p>
+          <div class="notification-actions">
+            <button class="btn btn-primary">Confirmar</button>
+            <button class="btn btn-danger">Negar</button>
+            <button class="btn btn-secondary">Reagendar</button>
+          </div>
+        `;
+
+        const [btnConfirmar, btnNegar, btnReagendar] =
+          card.querySelectorAll("button");
+
+        btnConfirmar.addEventListener("click", () =>
+          confirmarCita(n.id_cita, card),
+        );
+        btnNegar.addEventListener("click", () => cancelarCita(n.id_cita, card));
+        btnReagendar.addEventListener("click", () => reagendarCita(n.id_cita));
+
+        return card;
+      }
+
+      function crearCardUltimaHaceMes(n) {
+        const card = document.createElement("div");
+        card.className = "notification-card";
+
+        const fecha = formatearFecha(n.fecha);
+
+        card.innerHTML = `
+          <h2 class="notification-title">Tu última visita</h2>
+          <p class="notification-message">
+            Tu última cita fue el ${fecha}. ¡Ya pasó más de un mes!
+          </p>
+          <div class="notification-actions">
+            <button class="btn btn-primary">Aceptar</button>
+            <button class="btn btn-secondary">Agendar</button>
+          </div>
+        `;
+
+        const [btnAceptar, btnAgendar] = card.querySelectorAll("button");
+
+        btnAceptar.addEventListener("click", () => {
+          card.remove();
+        });
+
+        btnAgendar.addEventListener("click", () => {
+          window.location.href = "/agendar";
+        });
+
+        return card;
+      }
+
+      function crearCardProximaCita(n) {
+        const card = document.createElement("div");
+        card.className = "notification-card";
+
+        const fecha = formatearFecha(n.fecha);
+        const hora = formatearHora(n.hora);
+
+        card.innerHTML = `
+          <h2 class="notification-title">Próxima cita</h2>
+          <p class="notification-message">
+            Tu próxima cita es el ${fecha} a las ${hora}.
+          </p>
+          <div class="notification-actions">
+            <button class="btn btn-primary">Confirmar</button>
+            <button class="btn btn-danger">Cancelar</button>
+            <button class="btn btn-secondary">Reagendar</button>
+          </div>
+        `;
+
+        const [btnConfirmar, btnLiberar, btnReagendar] =
+          card.querySelectorAll("button");
+
+        btnConfirmar.addEventListener("click", () =>
+          confirmarCita(n.id_cita, card),
+        );
+        btnLiberar.addEventListener("click", () =>
+          cancelarCita(n.id_cita, card),
+        );
+        btnReagendar.addEventListener("click", () => reagendarCita(n.id_cita));
+
+        return card;
+      }
+
+      async function confirmarCita(id_cita, card) {
+        const token = getToken();
+        try {
+          const resp = await fetch(`${API_BASE}/citas/${id_cita}/confirmar`, {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          });
+          if (!resp.ok) {
+            const data = await resp.json().catch(() => ({}));
+            await showToast(
+              data.error || "Error al confirmar cita.",
+              "error",
+              3000,
+            );
+            return;
+          }
+          await showToast("Cita confirmada.", "success", 3000);
+          if (card) card.remove();
+        } catch (err) {
+          console.error("Error al confirmar cita:", err);
+          await showToast("Error de conexión.", "error", 3000);
+        }
+      }
+
+      async function cancelarCita(id_cita, card) {
+        const token = getToken();
+        try {
+          const resp = await fetch(`${API_BASE}/citas/${id_cita}/cancelar`, {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          });
+          if (!resp.ok) {
+            const data = await resp.json().catch(() => ({}));
+            await showToast(
+              data.error || "Error al cancelar cita.",
+              "error",
+              3000,
+            );
+            return;
+          }
+          await showToast("Cita cancelada.", "info", 3000);
+          if (card) card.remove();
+        } catch (err) {
+          console.error("Error al cancelar cita:", err);
+          await showToast("Error de conexión.", "error", 3000);
+        }
+      }
+
+      async function reagendarCita(id_cita) {
+        const token = getToken();
+        try {
+          const resp = await fetch(`${API_BASE}/citas/${id_cita}/reagendar`, {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          });
+          if (!resp.ok) {
+            const data = await resp.json().catch(() => ({}));
+            await showToast(
+              data.error || "Error al preparar reagenda.",
+              "error",
+              3000,
+            );
+            return;
+          }
+          window.location.href = "/agendar";
+        } catch (err) {
+          console.error("Error al reagendar cita:", err);
+          await showToast("Error de conexión.", "error", 3000);
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", cargarNotificaciones);
+    </script>
+  </body>
+</html>

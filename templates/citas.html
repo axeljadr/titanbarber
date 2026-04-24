@@ -842,7 +842,6 @@
       <!-- Toolbar -->
       <div class="toolbar">
         <div class="search-wrap">
-          <span class="ico">🔍</span>
           <input
             type="text"
             id="search-input"
@@ -863,7 +862,7 @@
           <option value="mes">Este mes</option>
         </select>
         <button class="btn btn-secondary" onclick="cargarCitas()">
-          ↻ Actualizar
+          Actualizar
         </button>
       </div>
 
@@ -1020,13 +1019,12 @@
             Cancelar
           </button>
           <button class="btn btn-primary" onclick="guardarEdicion()">
-            💾 Guardar cambios
+            Guardar cambios
           </button>
         </div>
       </div>
     </div>
 
-    <!-- ===== MODAL VER FOTO ===== -->
     <div class="foto-modal-backdrop" id="modal-foto">
       <div class="foto-modal-title" id="foto-modal-titulo">Foto</div>
       <img class="foto-modal-img" id="foto-modal-img" src="" alt="Foto" />
@@ -1035,57 +1033,73 @@
       </button>
     </div>
 
-    <!-- ===== FOOTER ===== -->
     <footer class="footer">
-      <div>
+      <div class="footer-logo">
         <img
           class="imagen-de-barberia"
           src="/images/titanicon.jpeg"
-          alt="Logo"
+          alt="Logo Titan Barbershop"
         />
       </div>
-      <nav class="text-link-list">
-        <h2 class="text-strong">contacto</h2>
-        <ul style="list-style: none">
+      <nav class="text-link-list" aria-labelledby="footer-contact">
+        <div class="text-strong-wrapper">
+          <h2 id="footer-contact" class="text-strong">
+            <span class="text-strong-2">contacto</span>
+          </h2>
+        </div>
+        <ul class="footer-list">
           <li class="text-link-list-item">
-            <a href="tel:9837324637" class="list-item">9837324637</a>
+            <a href="tel:8994173584" class="list-item">8994173584</a>
           </li>
-          <li class="text-link-list-item">
-            <a href="mailto:barberpi@utttn.mx" class="list-item-2"
-              >barberpi@utttn.mx</a
-            >
-          </li>
-        </ul>
-      </nav>
-      <nav class="text-link-list">
-        <h2 class="text-strong">ubicación</h2>
-        <ul style="list-style: none">
           <li class="text-link-list-item">
             <a
-              href="https://maps.app.goo.gl/ZD5gur5vPiwKMVCW9"
+              href="https://www.facebook.com/profile.php?id=61575344407514"
+              class="list-item-2"
+              >Facebook/El Titan</a
+            >
+          </li>
+        </ul>
+      </nav>
+      <nav class="text-link-list" aria-labelledby="footer-location">
+        <div class="text-strong-wrapper">
+          <h2 id="footer-location" class="text-strong">
+            <span class="text-strong-2">ubicación</span>
+          </h2>
+        </div>
+        <ul class="footer-list">
+          <li class="text-link-list-item">
+            <a
+              href="https://maps.app.goo.gl/6Ez4dZffyNu6njnAA?g_st=ac"
               target="_blank"
+              rel="noopener noreferrer"
               class="list-item-7"
-              >Google Maps</a
+              >google.maps/local</a
             >
           </li>
         </ul>
       </nav>
-      <nav class="text-link-list">
-        <h2 class="text-strong">creado por:</h2>
-        <ul style="list-style: none">
+      <nav class="text-link-list" aria-labelledby="footer-creator">
+        <div class="text-strong-wrapper">
+          <h2 id="footer-creator" class="text-strong">
+            <span class="">creado por:</span>
+          </h2>
+        </div>
+        <ul class="footer-list">
           <li class="text-link-list-item">
-            <span class="list-item-11">Axel Rivera</span>
-          </li>
-          <li class="text-link-list-item">
-            <a href="mailto:axel.delgado@uttn.mx" class="list-item-13"
-              >axel.delgado@uttn.mx</a
+            <span class="list-item-11"
+              >Estudiantes de la Universidad Tecnológica de Tamaulipas
+              Norte</span
             >
           </li>
           <li class="text-link-list-item">
-            <a href="tel:8994287620" class="list-item">8994287620</a>
+            <span class="list-item-12">Julio Axel Delgado Rivera</span>
+          </li>
+          <li class="text-link-list-item">
+            <span class="list-item-12">Axel Tristán Ramos Hernández</span>
           </li>
         </ul>
       </nav>
+      © 2026 The Titan Barbershop · Panel de Administración
     </footer>
 
     <div id="app-notify-root">

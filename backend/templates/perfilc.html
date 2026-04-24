@@ -1,0 +1,905 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/static/perfil.css" />
+    <link rel="stylesheet" href="/static/alerts.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <title>Perfil de Cliente – The Titan Barbershop</title>
+  </head>
+  <body>
+    <!-- ===== HEADER ===== -->
+    <header class="header">
+      <div class="block">
+        <img
+          class="imagen-de-barberia"
+          src="/images/titanicon.jpeg"
+          alt="Logo Titan Barbershop"
+        />
+      </div>
+      <nav class="navigation-pill-list" aria-label="Navegación principal">
+        <a href="/perfil" class="navigation-pill">
+          <span>Mi Perfil</span>
+        </a>
+        <a href="/homebarber" class="navigation-pill">
+          <span>Inicio</span>
+        </a>
+        <a href="/barber_agenda" class="navigation-pill">
+          <span>Agenda</span>
+        </a>
+        <a href="/notibarbero" class="navigation-pill">
+          <span>Notificaciones</span>
+        </a>
+        <a href="/panel" class="navigation-pill">
+          <span>Panel de Control</span>
+        </a>
+        <a href="/" class="navigation-pill">
+          <span>Cerrar Sesión</span>
+        </a>
+      </nav>
+    </header>
+
+    <!-- ===== MAIN ===== -->
+    <main class="main-content">
+      <!-- Breadcrumb -->
+      <div
+        style="
+          margin-bottom: 1.5rem;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-size: 0.85rem;
+          color: #888;
+        "
+      >
+        <a href="/panel" style="color: #b8860b; text-decoration: none">Panel</a>
+        <span>/</span>
+        <a href="/admin/clientes" style="color: #b8860b; text-decoration: none"
+          >Clientes</a
+        >
+        <span>/</span>
+        <span id="breadcrumb-nombre">Perfil</span>
+      </div>
+
+      <div class="profile-container">
+        <!-- ===== PROFILE HEADER ===== -->
+        <div class="profile-header">
+          <!-- Foto de perfil -->
+          <div class="photo-upload">
+            <img
+              id="foto-perfil"
+              src="https://placehold.co/120x120/16121c/b8860b?text=?"
+              alt="Foto de perfil"
+              class="profile-picture"
+            />
+          </div>
+
+          <!-- Info básica -->
+          <div class="profile-info">
+            <h1 class="profile-name" id="display-nombre">Cargando...</h1>
+            <p class="profile-role" id="display-rol">—</p>
+            <p class="profile-id" id="display-id">ID: —</p>
+            <p
+              class="profile-id"
+              style="margin-top: 0.25rem"
+              id="display-creado"
+            >
+              Registrado: —
+            </p>
+          </div>
+
+          <div style="margin-left: auto; align-self: flex-start">
+            <button class="btn btn-secondary" onclick="history.back()">
+              <i class="fa-solid fa-arrow-left" style="margin-right: 0.4rem"></i
+              >Volver
+            </button>
+          </div>
+        </div>
+
+        <!-- ===== DATOS DEL CLIENTE (editables) ===== -->
+        <div class="profile-form">
+          <div class="form-group">
+            <label>Nombre completo</label>
+            <input type="text" id="campo-nombre" readonly />
+          </div>
+
+          <div class="form-group">
+            <label>Apellido Paterno</label>
+            <input type="text" id="campo-apellidoP" readonly />
+          </div>
+
+          <div class="form-group">
+            <label>Apellido Materno</label>
+            <input type="text" id="campo-apellidoM" readonly />
+          </div>
+
+          <div class="form-group">
+            <label>Correo electrónico</label>
+            <input type="email" id="campo-email" readonly />
+          </div>
+
+          <div class="form-group">
+            <label>Teléfono</label>
+            <input type="text" id="campo-telefono" readonly />
+          </div>
+
+          <div class="form-group">
+            <label>Edad</label>
+            <input type="number" id="campo-edad" readonly />
+          </div>
+
+          <div class="form-group">
+            <label>Rol</label>
+            <select
+              id="campo-rol"
+              disabled
+              style="
+                background: #16121c;
+                color: #fff;
+                border: 1px solid rgba(184, 134, 11, 0.25);
+                padding: 0.6rem 0.9rem;
+                border-radius: 6px;
+                width: 100%;
+                font-size: 0.9rem;
+              "
+            >
+              <option value="cliente">Cliente</option>
+              <option value="admin">Administrador</option>
+              <option value="barbero">Barbero</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Fecha de registro</label>
+            <input type="text" id="campo-creado" readonly />
+          </div>
+        </div>
+
+        <!-- Botones de acción -->
+        <div
+          style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap"
+        >
+          <button
+            id="btn-editar"
+            onclick="habilitarEdicion()"
+            style="
+              background: rgba(184, 134, 11, 0.15);
+              border: 1px solid #b8860b;
+              color: #b8860b;
+              padding: 0.6rem 1.4rem;
+              border-radius: 8px;
+              cursor: pointer;
+              font-size: 0.9rem;
+              font-weight: 600;
+            "
+          >
+            Editar Datos
+          </button>
+          <button
+            id="btn-guardar"
+            onclick="guardarCambios()"
+            style="
+              display: none;
+              background: #b8860b;
+              border: none;
+              color: #000;
+              padding: 0.6rem 1.4rem;
+              border-radius: 8px;
+              cursor: pointer;
+              font-size: 0.9rem;
+              font-weight: 600;
+            "
+          >
+            <i class="fa-solid fa-floppy-disk" style="margin-right: 0.4rem"></i
+            >Guardar Cambios
+          </button>
+          <button
+            id="btn-cancelar"
+            onclick="cancelarEdicion()"
+            style="
+              display: none;
+              background: rgba(255, 255, 255, 0.05);
+              border: 1px solid #555;
+              color: #aaa;
+              padding: 0.6rem 1.4rem;
+              border-radius: 8px;
+              cursor: pointer;
+              font-size: 0.9rem;
+            "
+          >
+            Cancelar
+          </button>
+        </div>
+
+        <!-- ===== SEPARADOR ===== -->
+        <hr
+          style="
+            border: none;
+            border-top: 1px solid rgba(184, 134, 11, 0.18);
+            margin: 2rem 0;
+          "
+        />
+
+        <!-- ===== HISTORIAL DE CITAS ===== -->
+        <div
+          style="
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+          "
+        >
+          <h2
+            style="
+              font-family: &quot;Playfair Display&quot;, serif;
+              font-size: 1.2rem;
+              color: #e0c97a;
+            "
+          >
+            Historial de Citas
+          </h2>
+          <span id="total-citas" style="font-size: 0.82rem; color: #888"
+            >Cargando...</span
+          >
+        </div>
+
+        <!-- Tabla de citas -->
+        <div style="overflow-x: auto">
+          <table
+            id="tabla-citas"
+            style="width: 100%; border-collapse: collapse; font-size: 0.88rem"
+          >
+            <thead>
+              <tr style="border-bottom: 1px solid rgba(184, 134, 11, 0.25)">
+                <th
+                  style="
+                    padding: 0.6rem 0.8rem;
+                    text-align: left;
+                    color: #b8860b;
+                    font-weight: 600;
+                    white-space: nowrap;
+                  "
+                >
+                  #
+                </th>
+                <th
+                  style="
+                    padding: 0.6rem 0.8rem;
+                    text-align: left;
+                    color: #b8860b;
+                    font-weight: 600;
+                    white-space: nowrap;
+                  "
+                >
+                  Fecha
+                </th>
+                <th
+                  style="
+                    padding: 0.6rem 0.8rem;
+                    text-align: left;
+                    color: #b8860b;
+                    font-weight: 600;
+                    white-space: nowrap;
+                  "
+                >
+                  Hora
+                </th>
+                <th
+                  style="
+                    padding: 0.6rem 0.8rem;
+                    text-align: left;
+                    color: #b8860b;
+                    font-weight: 600;
+                    white-space: nowrap;
+                  "
+                >
+                  Servicio
+                </th>
+                <th
+                  style="
+                    padding: 0.6rem 0.8rem;
+                    text-align: left;
+                    color: #b8860b;
+                    font-weight: 600;
+                    white-space: nowrap;
+                  "
+                >
+                  Barbero
+                </th>
+                <th
+                  style="
+                    padding: 0.6rem 0.8rem;
+                    text-align: left;
+                    color: #b8860b;
+                    font-weight: 600;
+                    white-space: nowrap;
+                  "
+                >
+                  Estado
+                </th>
+                <th
+                  style="
+                    padding: 0.6rem 0.8rem;
+                    text-align: left;
+                    color: #b8860b;
+                    font-weight: 600;
+                    white-space: nowrap;
+                  "
+                >
+                  Precio
+                </th>
+                <th
+                  style="
+                    padding: 0.6rem 0.8rem;
+                    text-align: left;
+                    color: #b8860b;
+                    font-weight: 600;
+                    white-space: nowrap;
+                  "
+                >
+                  Evidencia
+                </th>
+              </tr>
+            </thead>
+            <tbody id="tbody-citas">
+              <tr>
+                <td
+                  colspan="8"
+                  style="padding: 2rem; text-align: center; color: #555"
+                >
+                  <i
+                    class="fa-solid fa-spinner fa-spin"
+                    style="margin-right: 0.5rem"
+                  ></i
+                  >Cargando citas...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div
+            id="paginacion-citas"
+            style="
+              display: none;
+              align-items: center;
+              justify-content: space-between;
+              padding: 0.9rem 0;
+              flex-wrap: wrap;
+              gap: 0.75rem;
+              margin-top: 0.5rem;
+            "
+          ></div>
+        </div>
+      </div>
+      <!-- /profile-container -->
+    </main>
+
+    <!-- ===== MODAL FOTO EVIDENCIA ===== -->
+    <div
+      id="modal-foto"
+      style="
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        background: rgba(0, 0, 0, 0.8);
+        align-items: center;
+        justify-content: center;
+      "
+    >
+      <div
+        style="
+          background: #16121c;
+          border: 1px solid rgba(184, 134, 11, 0.3);
+          border-radius: 12px;
+          width: min(500px, 95vw);
+          padding: 0;
+          overflow: hidden;
+          position: relative;
+        "
+      >
+        <div
+          style="
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(
+              90deg,
+              transparent,
+              #b8860b,
+              transparent
+            );
+          "
+        ></div>
+        <div
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.5rem;
+            background: #1e1828;
+            border-bottom: 1px solid rgba(184, 134, 11, 0.2);
+          "
+        >
+          <h3
+            style="
+              font-family: &quot;Playfair Display&quot;, serif;
+              color: #fff;
+              font-size: 1rem;
+              margin: 0;
+            "
+          >
+            Foto de Evidencia
+          </h3>
+          <button
+            onclick="cerrarModalFoto()"
+            class="close-btn"
+            style="
+              background: none;
+              border: none;
+              color: #aaa;
+              font-size: 1.4rem;
+              cursor: pointer;
+            "
+          >
+            ×
+          </button>
+        </div>
+        <div style="padding: 1.5rem; text-align: center">
+          <img
+            id="img-evidencia-modal"
+            src=""
+            alt="Evidencia"
+            style="
+              max-width: 100%;
+              max-height: 360px;
+              border-radius: 8px;
+              object-fit: contain;
+            "
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+      <div class="footer-logo">
+        <div class="text-strong-wrapper">
+          <span class="text-strong">The Titan</span>
+        </div>
+        <p
+          style="
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.82rem;
+            margin-top: 0.4rem;
+          "
+        >
+          Barbershop · Panel de Administración
+        </p>
+      </div>
+      <div class="text-link-list">
+        <div class="text-strong-wrapper">
+          <span class="text-strong" style="font-size: 1rem">Navegación</span>
+        </div>
+        <ul class="footer-list">
+          <li class="text-link-list-item">
+            <a href="/panel" class="list-item">Panel de Control</a>
+          </li>
+          <li class="text-link-list-item">
+            <a href="/admin/citas" class="list-item">Citas</a>
+          </li>
+          <li class="text-link-list-item">
+            <a href="/admin/clientes" class="list-item">Clientes</a>
+          </li>
+        </ul>
+      </div>
+    </footer>
+
+    <!-- ===== SCRIPT ===== -->
+    <script>
+      const API_BASE =
+        window.location.hostname === "localhost"
+          ? "http://localhost:4000/api"
+          : "/api";
+
+      function getToken() {
+        return localStorage.getItem("token");
+      }
+
+      // Obtener id_usuario de la URL: /admin/clientes/:id
+      function getIdFromURL() {
+        const parts = window.location.pathname.split("/");
+        return parts[parts.length - 1];
+      }
+
+      // ── Badges de estado ──
+      const ESTADO_BADGE = {
+        pendiente: { bg: "#3a2e00", color: "#f0c040", label: "Pendiente" },
+        confirmada: { bg: "#0a2e1a", color: "#4caf50", label: "Confirmada" },
+        completada: { bg: "#0d1f3c", color: "#64b5f6", label: "Completada" },
+        cancelada: { bg: "#2e0a0a", color: "#e57373", label: "Cancelada" },
+      };
+
+      function badgeEstado(estado) {
+        const e = ESTADO_BADGE[estado] || {
+          bg: "#222",
+          color: "#aaa",
+          label: estado,
+        };
+        return `<span style="background:${e.bg};color:${e.color};padding:.2rem .6rem;
+              border-radius:20px;font-size:.78rem;font-weight:600;">${e.label}</span>`;
+      }
+
+      // ── Cargar perfil ──
+      async function cargarPerfil() {
+        const token = getToken();
+        const id = getIdFromURL();
+
+        try {
+          const resp = await fetch(`${API_BASE}/admin/clientes/${id}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          if (!resp.ok) {
+            const d = await resp.json().catch(() => ({}));
+            mostrarError(d.error || "No se pudo cargar el perfil");
+            return;
+          }
+
+          const { cliente, citas } = await resp.json();
+
+          // Header
+          document.getElementById("breadcrumb-nombre").textContent =
+            cliente.nombre;
+          document.getElementById("display-nombre").textContent =
+            cliente.nombre;
+          document.getElementById("display-rol").textContent =
+            cliente.rol || "cliente";
+          document.getElementById("display-id").textContent =
+            `ID: ${cliente.id_usuario}`;
+          document.getElementById("display-creado").textContent =
+            `Registrado: ${cliente.fecha_registro ? new Date(cliente.fecha_registro).toLocaleDateString("es-MX") : "—"}`;
+
+          // Foto de perfil
+          if (cliente.foto_perfil) {
+            document.getElementById("foto-perfil").src =
+              `${API_BASE}/usuarios/${cliente.id_usuario}/foto-perfil?t=${Date.now()}`;
+          }
+
+          // Campos
+          document.getElementById("campo-nombre").value = cliente.nombre || "";
+          document.getElementById("campo-apellidoP").value =
+            cliente.apellidoP || "";
+          document.getElementById("campo-apellidoM").value =
+            cliente.apellidoM || "";
+          document.getElementById("campo-email").value = cliente.email || "";
+          document.getElementById("campo-telefono").value =
+            cliente.telefono || "";
+          document.getElementById("campo-edad").value = cliente.edad || "";
+          document.getElementById("campo-rol").value = cliente.rol || "cliente";
+          document.getElementById("campo-creado").value = cliente.fecha_registro
+            ? new Date(cliente.fecha_registro).toLocaleString("es-MX")
+            : "—";
+
+          // Citas
+          renderCitas(citas);
+        } catch (err) {
+          console.error("Error al cargar perfil:", err);
+          mostrarError("Error de conexión");
+        }
+      }
+
+      // Variables de paginación
+      let todasLasCitas = [];
+      let paginaCitas = 1;
+      const CITAS_POR_PAGINA = 5;
+
+      function renderCitas(citas) {
+        todasLasCitas = citas;
+        paginaCitas = 1;
+        document.getElementById("total-citas").textContent =
+          `${citas.length} cita${citas.length !== 1 ? "s" : ""} en total`;
+        renderPaginaCitas();
+      }
+
+      function renderPaginaCitas() {
+        const tbody = document.getElementById("tbody-citas");
+        const total = todasLasCitas.length;
+
+        if (!total) {
+          tbody.innerHTML = `<tr><td colspan="8" style="padding:2rem;text-align:center;color:#555;">
+      Sin citas registradas</td></tr>`;
+          document.getElementById("paginacion-citas").style.display = "none";
+          return;
+        }
+
+        const inicio = (paginaCitas - 1) * CITAS_POR_PAGINA;
+        const pagina = todasLasCitas.slice(inicio, inicio + CITAS_POR_PAGINA);
+
+        tbody.innerHTML = pagina
+          .map(
+            (c) => `
+    <tr style="border-bottom:1px solid rgba(255,255,255,.05);"
+        onmouseover="this.style.background='rgba(184,134,11,.05)'"
+        onmouseout="this.style.background='transparent'">
+      <td style="padding:.65rem .8rem;color:#888;">${c.id_cita}</td>
+      <td style="padding:.65rem .8rem;white-space:nowrap;">
+        ${c.fecha ? new Date(c.fecha).toLocaleDateString("es-MX") : "—"}
+      </td>
+      <td style="padding:.65rem .8rem;white-space:nowrap;">${c.hora || "—"}</td>
+      <td style="padding:.65rem .8rem;">${c.servicio_nombre || "—"}</td>
+      <td style="padding:.65rem .8rem;">${c.barbero_nombre || "—"}</td>
+      <td style="padding:.65rem .8rem;">${badgeEstado(c.estado)}</td>
+      <td style="padding:.65rem .8rem;white-space:nowrap;">
+        ${c.precio_estimado != null ? `$${parseFloat(c.precio_estimado).toFixed(2)}` : "—"}
+      </td>
+      <td style="padding:.65rem .8rem;">
+        ${
+          c.tiene_evidencia
+            ? `<button onclick="verEvidencia(${c.id_cita})"
+               style="background:#1e1828;border:1px solid rgba(184,134,11,.35);color:#b8860b;
+                      padding:.3rem .7rem;border-radius:6px;cursor:pointer;font-size:.8rem;">Ver</button>`
+            : `<span style="color:#444;font-size:.8rem;">Sin foto</span>`
+        }
+      </td>
+    </tr>
+  `,
+          )
+          .join("");
+
+        renderPaginacionCitas(total);
+      }
+
+      function renderPaginacionCitas(total) {
+        const totalPags = Math.ceil(total / CITAS_POR_PAGINA);
+        const cont = document.getElementById("paginacion-citas");
+
+        if (totalPags <= 1) {
+          cont.style.display = "none";
+          return;
+        }
+        cont.style.display = "flex";
+
+        const inicio = (paginaCitas - 1) * CITAS_POR_PAGINA + 1;
+        const fin = Math.min(paginaCitas * CITAS_POR_PAGINA, total);
+
+        cont.innerHTML = `
+    <span style="color:#666;font-size:.82rem;">Mostrando ${inicio}–${fin} de ${total}</span>
+    <div style="display:flex;gap:.4rem;">
+      <button onclick="irPaginaCitas(${paginaCitas - 1})"
+        ${paginaCitas === 1 ? "disabled" : ""}
+        style="width:32px;height:32px;border-radius:6px;background:rgba(255,255,255,.04);
+               border:1px solid rgba(184,134,11,.2);color:#aaa;cursor:pointer;">
+        <i class="fa-solid fa-chevron-left"></i>
+      </button>
+      ${Array.from(
+        { length: totalPags },
+        (_, i) => `
+        <button onclick="irPaginaCitas(${i + 1})"
+          style="width:32px;height:32px;border-radius:6px;cursor:pointer;font-size:.82rem;
+                 background:${i + 1 === paginaCitas ? "#b8860b" : "rgba(255,255,255,.04)"};
+                 color:${i + 1 === paginaCitas ? "#000" : "#aaa"};
+                 border:1px solid ${i + 1 === paginaCitas ? "#b8860b" : "rgba(184,134,11,.2)"};
+                 font-weight:${i + 1 === paginaCitas ? "700" : "400"};">
+          ${i + 1}
+        </button>
+      `,
+      ).join("")}
+      <button onclick="irPaginaCitas(${paginaCitas + 1})"
+        ${paginaCitas === totalPags ? "disabled" : ""}
+        style="width:32px;height:32px;border-radius:6px;background:rgba(255,255,255,.04);
+               border:1px solid rgba(184,134,11,.2);color:#aaa;cursor:pointer;">
+        <i class="fa-solid fa-chevron-right"></i>
+      </button>
+    </div>
+  `;
+      }
+
+      function irPaginaCitas(n) {
+        const total = Math.ceil(todasLasCitas.length / CITAS_POR_PAGINA);
+        if (n < 1 || n > total) return;
+        paginaCitas = n;
+        renderPaginaCitas();
+      }
+
+      // ── Edición de campos ──
+      let datosOriginales = {};
+
+      function habilitarEdicion() {
+        datosOriginales = {
+          nombre: document.getElementById("campo-nombre").value,
+          apellidoP: document.getElementById("campo-apellidoP").value,
+          apellidoM: document.getElementById("campo-apellidoM").value,
+          email: document.getElementById("campo-email").value,
+          telefono: document.getElementById("campo-telefono").value,
+          edad: document.getElementById("campo-edad").value,
+          rol: document.getElementById("campo-rol").value,
+        };
+        [
+          "campo-nombre",
+          "campo-apellidoP",
+          "campo-apellidoM",
+          "campo-email",
+          "campo-telefono",
+          "campo-edad",
+        ].forEach((id) =>
+          document.getElementById(id).removeAttribute("readonly"),
+        );
+        document.getElementById("campo-rol").disabled = false;
+        document.getElementById("btn-editar").style.display = "none";
+        document.getElementById("btn-guardar").style.display = "inline-block";
+        document.getElementById("btn-cancelar").style.display = "inline-block";
+      }
+
+      function cancelarEdicion() {
+        document.getElementById("campo-nombre").value = datosOriginales.nombre;
+        document.getElementById("campo-apellidoP").value =
+          datosOriginales.apellidoP;
+        document.getElementById("campo-apellidoM").value =
+          datosOriginales.apellidoM;
+        document.getElementById("campo-email").value = datosOriginales.email;
+        document.getElementById("campo-telefono").value =
+          datosOriginales.telefono;
+        document.getElementById("campo-edad").value = datosOriginales.edad;
+        document.getElementById("campo-rol").value = datosOriginales.rol;
+        bloquearCampos();
+      }
+
+      function bloquearCampos() {
+        [
+          "campo-nombre",
+          "campo-apellidoP",
+          "campo-apellidoM",
+          "campo-email",
+          "campo-telefono",
+          "campo-edad",
+        ].forEach((id) =>
+          document.getElementById(id).setAttribute("readonly", true),
+        );
+        document.getElementById("campo-rol").disabled = true;
+        document.getElementById("btn-editar").style.display = "inline-block";
+        document.getElementById("btn-guardar").style.display = "none";
+        document.getElementById("btn-cancelar").style.display = "none";
+      }
+
+      async function guardarCambios() {
+        const token = getToken();
+        const id = getIdFromURL();
+        const body = {
+          nombre: document.getElementById("campo-nombre").value,
+          apellidoP: document.getElementById("campo-apellidoP").value,
+          apellidoM: document.getElementById("campo-apellidoM").value,
+          email: document.getElementById("campo-email").value,
+          telefono: document.getElementById("campo-telefono").value,
+          edad: document.getElementById("campo-edad").value,
+          rol: document.getElementById("campo-rol").value,
+        };
+
+        try {
+          const resp = await fetch(`${API_BASE}/admin/clientes/${id}/editar`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(body),
+          });
+          if (resp.ok) {
+            document.getElementById("display-nombre").textContent = body.nombre;
+            document.getElementById("display-rol").textContent = body.rol;
+            bloquearCampos();
+            mostrarToast("Datos actualizados correctamente");
+          } else {
+            const d = await resp.json().catch(() => ({}));
+            mostrarToast(d.error || "Error al guardar", true);
+          }
+        } catch (err) {
+          mostrarToast("Error de conexión", true);
+        }
+      }
+
+      function mostrarToast(msg, esError = false) {
+        const t = document.createElement("div");
+        t.textContent = msg;
+        t.style.cssText = `position:fixed;bottom:2rem;right:2rem;z-index:9999;
+        background:${esError ? "#7f1d1d" : "#1a3a1a"};
+        color:${esError ? "#fca5a5" : "#86efac"};
+        border:1px solid ${esError ? "#ef4444" : "#22c55e"};
+        padding:.75rem 1.25rem;border-radius:8px;font-size:.88rem;
+        box-shadow:0 4px 20px rgba(0,0,0,.4);`;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 3500);
+      }
+
+      // ── Ver evidencia ──
+      async function verEvidencia(id_cita) {
+        const token = getToken();
+        const modal = document.getElementById("modal-foto");
+        const img = document.getElementById("img-evidencia-modal");
+
+        img.src = "";
+        modal.style.display = "flex";
+
+        try {
+          const resp = await fetch(
+            `${API_BASE}/citas/${id_cita}/evidencia-foto`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            },
+          );
+          if (!resp.ok) {
+            cerrarModalFoto();
+            return;
+          }
+          const blob = await resp.blob();
+          img.src = URL.createObjectURL(blob);
+        } catch (err) {
+          console.error("Error al cargar evidencia:", err);
+          cerrarModalFoto();
+        }
+      }
+
+      function cerrarModalFoto() {
+        document.getElementById("modal-foto").style.display = "none";
+      }
+
+      // ── Error visual ──
+      function mostrarError(msg) {
+        document.querySelector(".profile-container").innerHTML =
+          `<div style="text-align:center;padding:3rem;color:#e57373;">
+           <i class="fa-solid fa-circle-exclamation" style="font-size:2rem;margin-bottom:1rem;display:block;"></i>
+           ${msg}
+         </div>`;
+      }
+
+      // ── Init ──
+      document.addEventListener("DOMContentLoaded", () => {
+        const token = getToken();
+        if (!token) {
+          window.location.href = "/";
+          return;
+        }
+
+        try {
+          const payload = JSON.parse(atob(token.split(".")[1]));
+          if (payload.rol !== "admin") {
+            window.location.href = "/home";
+            return;
+          }
+        } catch {
+          window.location.href = "/";
+          return;
+        }
+
+        cargarPerfil();
+      });
+
+      document.getElementById("logout-link").addEventListener("click", (e) => {
+        e.preventDefault();
+        localStorage.removeItem("token");
+        window.location.href = "/";
+      });
+
+      // Cerrar modal con ESC o click fuera
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") cerrarModalFoto();
+      });
+      document.getElementById("modal-foto").addEventListener("click", (e) => {
+        if (e.target === document.getElementById("modal-foto"))
+          cerrarModalFoto();
+      });
+    </script>
+  </body>
+</html>

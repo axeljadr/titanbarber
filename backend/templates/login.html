@@ -1,0 +1,542 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Titan Barbershop</title>
+    <link rel="stylesheet" href="../static/prueba.css" />
+  </head>
+  <body>
+    <div class="card">
+      <div class="logo-area">
+        <div class="logo-placeholder">
+          <img
+            class="img"
+            src="/images/titanicon.jpeg"
+            alt="The Titan Barbershop"
+          />
+        </div>
+        <div class="brand-name">The Titan</div>
+        <div class="brand-tagline">Barbershop</div>
+      </div>
+
+      <div class="section-divider"><span>Acceso</span></div>
+
+      <form id="login-form" novalidate>
+        <div class="form-group">
+          <label for="email">Correo electrónico</label>
+          <div class="input-wrapper">
+            <i class="icon fa-solid fa-envelope"></i>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              placeholder="tu@correo.com"
+              required
+            />
+          </div>
+          <div class="field-error" id="emailError">
+            Ingresa un correo válido
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Contraseña</label>
+          <div class="input-wrapper">
+            <i class="icon fa-solid fa-lock"></i>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              placeholder="••••••••"
+              required
+            />
+            <button
+              type="button"
+              class="toggle-pass"
+              id="togglePass"
+              tabindex="-1"
+            >
+              <i class="fa-solid fa-eye" id="eyeIcon"></i>
+            </button>
+          </div>
+          <div class="field-error" id="passError">Mínimo 6 caracteres</div>
+        </div>
+
+        <div class="forgot">
+          <a href="#" id="btn-forgot">¿Olvidaste tu contraseña?</a>
+        </div>
+
+        <button type="submit" class="btn-login" id="loginBtn">
+          <span class="btn-text">Ingresar</span>
+          <span class="btn-spinner"><span class="spinner-ring"></span></span>
+        </button>
+
+        <div class="register-sep"><span>¿Nuevo aquí?</span></div>
+
+        <div class="create-account">
+          <p>Crea tu cuenta y gestiona tus citas</p>
+          <button
+            type="button"
+            class="create-button"
+            onclick="window.location.href = '/newaccount'"
+          >
+            <i class="fa-solid fa-user-plus"></i> Crear cuenta nueva
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="toast" id="toast">
+      <span id="toastIcon"></span>
+      <span id="toastMsg"></span>
+    </div>
+
+    <div
+      id="modal-forgot"
+      style="
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+      "
+    >
+      <div
+        style="
+          background: #16121c;
+          border: 1px solid rgba(184, 134, 11, 0.35);
+          border-radius: 16px;
+          padding: 2rem 1.8rem;
+          width: 90%;
+          max-width: 400px;
+          position: relative;
+        "
+      >
+        <button
+          onclick="cerrarModalForgot()"
+          style="
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: rgba(232, 213, 160, 0.5);
+            font-size: 1.3rem;
+            cursor: pointer;
+          "
+        >
+          ✕
+        </button>
+        <h3 style="color: #e8d5a0; margin: 0 0 0.4rem">Recuperar contraseña</h3>
+        <p
+          style="
+            color: rgba(232, 213, 160, 0.6);
+            font-size: 0.85rem;
+            margin: 0 0 1.2rem;
+          "
+        >
+          Te enviaremos un link para crear una nueva contraseña.
+        </p>
+        <input
+          type="email"
+          id="forgot-email"
+          placeholder="tu@correo.com"
+          style="
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(184, 134, 11, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            color: #e8d5a0;
+            font-size: 0.95rem;
+            box-sizing: border-box;
+            margin-bottom: 1rem;
+          "
+        />
+        <button
+          onclick="enviarRecuperacion()"
+          id="btn-enviar-recuperacion"
+          style="
+            width: 100%;
+            padding: 0.8rem;
+            background: linear-gradient(135deg, #b8860b, #d4a017);
+            color: #0d0b0e;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+          "
+        >
+          Enviar link
+        </button>
+        <div
+          id="forgot-success"
+          style="display: none; text-align: center; margin-top: 1rem"
+        >
+          <div style="font-size: 2rem">📧</div>
+          <p style="color: #4caf7d; font-weight: 600; margin: 0.5rem 0 0.2rem">
+            ¡Correo enviado!
+          </p>
+          <p
+            id="forgot-success-email"
+            style="
+              color: rgba(232, 213, 160, 0.6);
+              font-size: 0.85rem;
+              margin: 0;
+            "
+          >
+            Revisa tu bandeja de entrada.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="modal-nueva-pass"
+      style="
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+      "
+    >
+      <div
+        style="
+          background: #16121c;
+          border: 1px solid rgba(184, 134, 11, 0.35);
+          border-radius: 16px;
+          padding: 2rem 1.8rem;
+          width: 90%;
+          max-width: 400px;
+          position: relative;
+        "
+      >
+        <h3 style="color: #e8d5a0; margin: 0 0 0.4rem">Nueva contraseña</h3>
+        <p
+          style="
+            color: rgba(232, 213, 160, 0.6);
+            font-size: 0.85rem;
+            margin: 0 0 1.2rem;
+          "
+        >
+          Escribe tu nueva contraseña (mínimo 8 caracteres).
+        </p>
+
+        <input
+          type="password"
+          id="nueva-pass"
+          placeholder="Nueva contraseña"
+          style="
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(184, 134, 11, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            color: #e8d5a0;
+            font-size: 0.95rem;
+            box-sizing: border-box;
+            margin-bottom: 0.8rem;
+          "
+        />
+        <input
+          type="password"
+          id="nueva-pass-confirm"
+          placeholder="Confirmar contraseña"
+          style="
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(184, 134, 11, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            color: #e8d5a0;
+            font-size: 0.95rem;
+            box-sizing: border-box;
+            margin-bottom: 0.4rem;
+          "
+        />
+        <p
+          id="nueva-pass-hint"
+          style="font-size: 0.8rem; min-height: 1.2rem; margin: 0 0 1rem"
+        ></p>
+
+        <button
+          onclick="guardarNuevaPass()"
+          id="btn-guardar-pass"
+          style="
+            width: 100%;
+            padding: 0.8rem;
+            background: linear-gradient(135deg, #b8860b, #d4a017);
+            color: #0d0b0e;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+          "
+        >
+          Guardar contraseña
+        </button>
+      </div>
+    </div>
+
+    <script>
+      const API_BASE_URL =
+        window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1"
+          ? "http://localhost:4000"
+          : window.location.origin;
+
+      // ── Toggle password visibility ──
+      document.getElementById("togglePass").addEventListener("click", () => {
+        const input = document.getElementById("password");
+        const icon = document.getElementById("eyeIcon");
+        if (input.type === "password") {
+          input.type = "text";
+          icon.className = "fa-solid fa-eye-slash";
+        } else {
+          input.type = "password";
+          icon.className = "fa-solid fa-eye";
+        }
+      });
+
+      function showToast(msg, type = "success") {
+        const toast = document.getElementById("toast");
+        document.getElementById("toastMsg").textContent = msg;
+        document.getElementById("toastIcon").innerHTML =
+          type === "success"
+            ? '<i class="fa-solid fa-check" style="color:#b8860b"></i>'
+            : '<i class="fa-solid fa-xmark" style="color:#c0392b"></i>';
+        toast.className = `toast ${type} show`;
+        setTimeout(() => toast.classList.remove("show"), 3500);
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const params = new URLSearchParams(window.location.search);
+
+        if (params.get("cuenta") === "creada") {
+          showToast(
+            "Cuenta creada exitosamente. Ya puedes iniciar sesión.",
+            "success",
+          );
+          history.replaceState({}, "", "/");
+        }
+
+        const tokenReset = params.get("reset");
+        if (tokenReset) {
+          history.replaceState({}, "", "/");
+          abrirModalNuevaPass(tokenReset);
+        }
+
+        if (params.get("error") === "token_expirado") {
+          showToast("El link expiró. Solicita uno nuevo.", "error");
+          history.replaceState({}, "", "/");
+        }
+
+        const form = document.getElementById("login-form");
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const email = document.getElementById("email").value.trim();
+          const contraseña = document.getElementById("password").value.trim();
+
+          let valid = true;
+          if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            document.getElementById("emailError").classList.add("show");
+            valid = false;
+          }
+          if (!contraseña || contraseña.length < 6) {
+            document.getElementById("passError").classList.add("show");
+            valid = false;
+          }
+          if (!valid) return;
+
+          const btn = document.getElementById("loginBtn");
+          btn.classList.add("loading");
+          btn.disabled = true;
+
+          try {
+            const resp = await fetch(`${API_BASE_URL}/api/auth/login`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email, contraseña }),
+            });
+
+            let data;
+            try {
+              data = await resp.json();
+            } catch {
+              showToast(
+                "El servidor no devolvió una respuesta válida",
+                "error",
+              );
+              return;
+            }
+
+            if (!resp.ok) {
+              showToast(data.error || `Error (${resp.status})`, "error");
+              return;
+            }
+            if (!data.token || !data.usuario) {
+              showToast("Respuesta incompleta", "error");
+              return;
+            }
+
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("rol", data.usuario.rol);
+            localStorage.setItem("usuario", JSON.stringify(data.usuario));
+
+            showToast("Bienvenido:)", "success");
+            setTimeout(() => redirigirSegunRol(data.usuario.rol), 1000);
+          } catch {
+            showToast("Error de conexión. Intenta más tarde.", "error");
+          } finally {
+            btn.classList.remove("loading");
+            btn.disabled = false;
+          }
+        });
+      });
+
+      ["email", "password"].forEach((id) => {
+        document.getElementById(id).addEventListener("input", () => {
+          document
+            .getElementById(id === "email" ? "emailError" : "passError")
+            .classList.remove("show");
+        });
+      });
+
+      function redirigirSegunRol(rol) {
+        switch (rol) {
+          case "barbero":
+          case "admin":
+            window.location.href = "/homebarber";
+            break;
+          default:
+            window.location.href = "/home";
+            break;
+        }
+      }
+
+      document.getElementById("btn-forgot").addEventListener("click", (e) => {
+        e.preventDefault();
+        document.getElementById("forgot-email").value = "";
+        document.getElementById("forgot-success").style.display = "none";
+        document.getElementById("forgot-email").style.display = "block";
+        document.getElementById("btn-enviar-recuperacion").style.display =
+          "block";
+        const modal = document.getElementById("modal-forgot");
+        modal.style.display = "flex";
+      });
+
+      function cerrarModalForgot() {
+        document.getElementById("modal-forgot").style.display = "none";
+      }
+
+      async function enviarRecuperacion() {
+        const email = document.getElementById("forgot-email").value.trim();
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          showToast("Ingresa un correo válido", "error");
+          return;
+        }
+
+        const btn = document.getElementById("btn-enviar-recuperacion");
+        btn.disabled = true;
+        btn.textContent = "Enviando...";
+
+        try {
+          const resp = await fetch(`${API_BASE_URL}/api/auth/recuperar`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email }),
+          });
+
+          document.getElementById("forgot-email").style.display = "none";
+          document.getElementById("btn-enviar-recuperacion").style.display =
+            "none";
+          document.getElementById("forgot-success-email").textContent =
+            `Enviado a: ${email}`;
+          document.getElementById("forgot-success").style.display = "block";
+        } catch {
+          showToast("Error de conexión", "error");
+          btn.disabled = false;
+          btn.textContent = "Enviar link";
+        }
+      }
+
+      let _resetToken = null;
+
+      function abrirModalNuevaPass(token) {
+        _resetToken = token;
+        document.getElementById("nueva-pass").value = "";
+        document.getElementById("nueva-pass-confirm").value = "";
+        document.getElementById("nueva-pass-hint").textContent = "";
+        document.getElementById("modal-nueva-pass").style.display = "flex";
+      }
+
+      ["nueva-pass", "nueva-pass-confirm"].forEach((id) => {
+        document.getElementById(id).addEventListener("input", () => {
+          const p1 = document.getElementById("nueva-pass").value;
+          const p2 = document.getElementById("nueva-pass-confirm").value;
+          const hint = document.getElementById("nueva-pass-hint");
+          if (!p2) {
+            hint.textContent = "";
+            return;
+          }
+          if (p1 === p2 && p1.length >= 8) {
+            hint.textContent = "Las contraseñas coinciden";
+            hint.style.color = "#4caf7d";
+          } else if (p1 !== p2) {
+            hint.textContent = "Las contraseñas no coinciden";
+            hint.style.color = "#e05c5c";
+          } else {
+            hint.textContent = "";
+          }
+        });
+      });
+
+      async function guardarNuevaPass() {
+        const pass = document.getElementById("nueva-pass").value;
+        const confirm = document.getElementById("nueva-pass-confirm").value;
+
+        if (pass.length < 8) return showToast("Mínimo 8 caracteres", "error");
+        if (pass !== confirm)
+          return showToast("Las contraseñas no coinciden", "error");
+
+        const btn = document.getElementById("btn-guardar-pass");
+        btn.disabled = true;
+        btn.textContent = "Guardando...";
+
+        try {
+          const resp = await fetch(`${API_BASE_URL}/api/auth/nueva-password`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ token: _resetToken, contraseña: pass }),
+          });
+
+          const data = await resp.json();
+
+          if (resp.ok) {
+            document.getElementById("modal-nueva-pass").style.display = "none";
+            showToast(
+              "✅ Contraseña actualizada. Ya puedes iniciar sesión.",
+              "success",
+            );
+          } else {
+            showToast(data.error || "Error al guardar", "error");
+            btn.disabled = false;
+            btn.textContent = "Guardar contraseña";
+          }
+        } catch {
+          showToast("Error de conexión", "error");
+          btn.disabled = false;
+          btn.textContent = "Guardar contraseña";
+        }
+      }
+    </script>
+  </body>
+</html>

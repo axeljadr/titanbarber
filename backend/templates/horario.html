@@ -1,0 +1,991 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <title>Horarios – The Titan Barbershop</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --bg: #0d0b0e;
+        --surface: #16121c;
+        --surface-2: #1e1828;
+        --border: rgba(184, 134, 11, 0.22);
+        --border-hover: rgba(184, 134, 11, 0.5);
+        --gold: #000000;
+        --gold-light: #ffffff;
+        --text: #ffffff;
+        --text-muted: rgba(255, 255, 255, 0.885);
+        --text-soft: rgba(255, 255, 255, 0.736);
+        --error: #c0392b;
+        --radius: 12px;
+      }
+
+      /* ── Body ── */
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--bg);
+        background-image:
+          radial-gradient(
+            ellipse at top left,
+            rgba(90, 50, 140, 0.2) 0%,
+            transparent 55%
+          ),
+          radial-gradient(
+            ellipse at top right,
+            rgba(160, 110, 20, 0.18) 0%,
+            transparent 55%
+          );
+        color: var(--text);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* ══════════════════════════════
+   HEADER
+══════════════════════════════ */
+      .header {
+        background-color: var(--surface);
+        border-bottom: 1px solid var(--border);
+        color: var(--text);
+        padding: 1rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+
+      .imagen-de-barberia {
+        width: 80px;
+        height: 80px;
+        border-radius: 20px;
+        object-fit: cover;
+        border: 2px solid var(--border);
+      }
+
+      .navigation-pill-list {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .navigation-pill {
+        align-items: center;
+        color: var(--text);
+        text-decoration: none;
+        padding: 0.4rem 0.9rem;
+        border-radius: 9px;
+        background-color: rgb(0, 0, 0);
+        border: 1px solid rgba(184, 134, 11, 0.3);
+        font-size: 20px;
+        transition:
+          background-color 0.5s,
+          color 0.5s,
+          border-color 0.5s,
+          transform 0.5s;
+      }
+
+      .navigation-pill:hover {
+        background-color: white;
+        color: black;
+        border-color: black;
+        transform: translateY(-3px);
+      }
+      /* ── MAIN ── */
+      .main {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+
+      .page-title {
+        font-family: "Playfair Display", serif;
+        font-size: 1.6rem;
+        color: #e0c97a;
+        margin-bottom: 0.3rem;
+      }
+      .page-subtitle {
+        color: #888;
+        font-size: 0.88rem;
+        margin-bottom: 2rem;
+      }
+
+      /* ── CARD ── */
+      .card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(184, 134, 11, 0.18);
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+      }
+      .card-header {
+        background: rgba(184, 134, 11, 0.08);
+        border-bottom: 1px solid rgba(184, 134, 11, 0.18);
+        padding: 1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+      .card-header h2 {
+        font-family: "Playfair Display", serif;
+        font-size: 1.05rem;
+        color: #e0c97a;
+      }
+      .card-body {
+        padding: 1.5rem;
+      }
+
+      /* ── SELECTOR BARBERO ── */
+      select,
+      input[type="time"],
+      input[type="number"] {
+        background: #16121c;
+        color: #fff;
+        border: 1px solid rgba(184, 134, 11, 0.3);
+        border-radius: 8px;
+        padding: 0.55rem 0.9rem;
+        font-size: 0.9rem;
+        font-family: "Inter", sans-serif;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+      select:focus,
+      input:focus {
+        border-color: #b8860b;
+      }
+
+      /* ── GRID DE DÍAS ── */
+      .dias-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 1rem;
+      }
+
+      .dia-card {
+        background: #16121c;
+        border: 1px solid rgba(184, 134, 11, 0.15);
+        border-radius: 10px;
+        padding: 1.1rem 1.2rem;
+        transition: border-color 0.2s;
+      }
+      .dia-card.activo {
+        border-color: rgba(184, 134, 11, 0.45);
+      }
+      .dia-card.inactivo {
+        opacity: 0.55;
+      }
+
+      .dia-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.9rem;
+      }
+      .dia-nombre {
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: #e0c97a;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .dia-nombre i {
+        color: #b8860b;
+        font-size: 0.85rem;
+      }
+
+      /* Toggle switch */
+      .toggle {
+        position: relative;
+        display: inline-block;
+        width: 42px;
+        height: 22px;
+      }
+      .toggle input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .slider {
+        position: absolute;
+        inset: 0;
+        cursor: pointer;
+        background: #333;
+        border-radius: 22px;
+        transition: 0.3s;
+      }
+      .slider::before {
+        content: "";
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        left: 3px;
+        bottom: 3px;
+        background: #fff;
+        border-radius: 50%;
+        transition: 0.3s;
+      }
+      .toggle input:checked + .slider {
+        background: #b8860b;
+      }
+      .toggle input:checked + .slider::before {
+        transform: translateX(20px);
+      }
+
+      .dia-fields {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+      }
+      .dia-field label {
+        font-size: 0.75rem;
+        color: #888;
+        display: block;
+        margin-bottom: 0.2rem;
+      }
+      .dia-field input[type="time"] {
+        width: 100%;
+      }
+      .dia-field input[type="number"] {
+        width: 100%;
+      }
+
+      /* ── BOTONES ── */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.6rem 1.4rem;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        transition: all 0.2s;
+        font-family: "Inter", sans-serif;
+      }
+      .btn-gold {
+        background: #b8860b;
+        color: #000;
+      }
+      .btn-gold:hover {
+        background: #d4a017;
+      }
+      .btn-secondary {
+        background: transparent;
+        border-color: var(--border);
+        color: var(--text-muted);
+      }
+      .btn-secondary:hover {
+        border-color: var(--border-hover);
+        color: var(--text);
+      }
+      .btn-outline {
+        background: rgba(184, 134, 11, 0.1);
+        color: #b8860b;
+        border: 1px solid rgba(184, 134, 11, 0.4);
+      }
+      .btn-outline:hover {
+        background: rgba(184, 134, 11, 0.2);
+      }
+      .btn-danger {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+      }
+      .btn-danger:hover {
+        background: rgba(239, 68, 68, 0.2);
+      }
+      .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      /* ── ESTADO VACÍO ── */
+      .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: #555;
+      }
+      .empty-state i {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        display: block;
+        color: #333;
+      }
+
+      /* ── TOAST ── */
+      .toast {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        z-index: 9999;
+        padding: 0.75rem 1.25rem;
+        border-radius: 8px;
+        font-size: 0.88rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        animation: slideIn 0.3s ease;
+      }
+      .toast.ok {
+        background: #1a3a1a;
+        color: #86efac;
+        border: 1px solid #22c55e;
+      }
+      .toast.err {
+        background: #7f1d1d;
+        color: #fca5a5;
+        border: 1px solid #ef4444;
+      }
+      @keyframes slideIn {
+        from {
+          transform: translateY(20px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      /* ── FOOTER ── */
+      .footer {
+        margin-top: 3rem;
+        padding: 1.5rem 2rem;
+        border-top: 1px solid rgba(184, 134, 11, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+        color: #555;
+        font-size: 0.82rem;
+      }
+      .footer span {
+        color: #b8860b;
+        font-family: "Playfair Display", serif;
+        font-size: 0.95rem;
+      }
+
+      /* ── LOADING ── */
+      .spinner {
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        border: 2px solid rgba(184, 134, 11, 0.3);
+        border-top-color: #b8860b;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* ── BADGE ACTIVO/INACTIVO ── */
+      .badge {
+        font-size: 0.72rem;
+        font-weight: 600;
+        padding: 0.15rem 0.55rem;
+        border-radius: 20px;
+      }
+      .badge-on {
+        background: #0a2e1a;
+        color: #4caf50;
+      }
+      .badge-off {
+        background: #2e1a1a;
+        color: #e57373;
+      }
+      /* ══ BREADCRUMB ══ */
+      .breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.8rem;
+        color: var(--text-soft);
+        margin-bottom: 0.75rem;
+        flex-wrap: wrap;
+      }
+      .breadcrumb a {
+        color: rgba(184, 134, 11, 0.85);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .breadcrumb a:hover {
+        color: rgba(184, 134, 11, 1);
+        text-decoration: underline;
+      }
+      .breadcrumb .sep {
+        color: var(--text-soft);
+        opacity: 0.5;
+      }
+      .breadcrumb .current {
+        color: var(--text-muted);
+      }
+
+      /* ══ PAGE TOP ROW ══ */
+      .page-top-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+      }
+      .page-top-row .page-title {
+        margin-bottom: 0;
+      }
+
+      @media (max-width: 768px) {
+        .header {
+          padding: 0.85rem 1rem;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 0.75rem;
+        }
+
+        /* Fila superior: logo + nombre del sitio */
+        .header .block {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+        }
+
+        .imagen-de-barberia {
+          width: 48px;
+          height: 48px;
+          border-radius: 12px;
+          flex-shrink: 0;
+        }
+
+        /* Nav: grid de 3 columnas, pills apilados en vertical */
+        .navigation-pill-list {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 6px;
+          width: 100%;
+        }
+
+        .navigation-pill {
+          font-size: 13px;
+          padding: 0.5rem 0.4rem;
+          text-align: center;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          border-radius: 8px;
+          justify-content: center;
+          display: flex;
+          align-items: center;
+        }
+
+        .footer {
+          flex-direction: column;
+          gap: 1.5rem;
+        }
+        .main-content {
+          padding: 1.5rem 1rem 2.5rem;
+        }
+
+        .notifications-header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .notification-tabs {
+          flex-wrap: wrap;
+        }
+
+        .notification-tab {
+          flex: 1;
+          text-align: center;
+          min-width: 120px;
+        }
+
+        .notification-meta {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .notification-actions {
+          width: 100%;
+          justify-content: flex-start;
+          margin-top: 0.5rem;
+        }
+      }
+
+      @media (max-width: 500px) {
+        .navigation-pill {
+          padding: 0.3rem 0.7rem;
+          font-size: 0.8rem;
+        }
+      }
+      @media (max-width: 400px) {
+        .navigation-pill-list {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .navigation-pill {
+          font-size: 12px;
+          padding: 0.45rem 0.3rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="block">
+        <img
+          class="imagen-de-barberia"
+          src="/images/titanicon.jpeg"
+          alt="Logo Titan Barbershop"
+        />
+      </div>
+      <nav class="navigation-pill-list" aria-label="Navegación principal">
+        <a href="/perfil" class="navigation-pill">
+          <span>Mi Perfil</span>
+        </a>
+        <a href="/homebarber" class="navigation-pill">
+          <span>Inicio</span>
+        </a>
+        <a href="/barber_agenda" class="navigation-pill">
+          <span>Agenda</span>
+        </a>
+        <a href="/notibarbero" class="navigation-pill">
+          <span>Notificaciones</span>
+        </a>
+        <a href="/panel" class="navigation-pill">
+          <span>Panel de Control</span>
+        </a>
+        <a href="/" class="navigation-pill">
+          <span>Cerrar Sesión</span>
+        </a>
+      </nav>
+    </header>
+
+    <!-- MAIN -->
+    <main class="main">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/panel">Panel</a>
+        <span class="sep">/</span>
+        <span class="current">Horarios</span>
+      </nav>
+
+      <!-- Title row + back button -->
+      <div class="page-top-row">
+        <div class="page-title">Gestión de Horarios</div>
+        <a href="/panel" class="btn btn-secondary">← Volver</a>
+      </div>
+      <p class="page-subtitle">
+        Configura los días y horas de trabajo de cada barbero.
+      </p>
+
+      <!-- Selector de barbero -->
+      <div class="card">
+        <div class="card-header">
+          <h2>
+            <i
+              class="fa-solid fa-scissors"
+              style="color: #b8860b; margin-right: 0.5rem"
+            ></i
+            >Seleccionar Barbero
+          </h2>
+        </div>
+        <div
+          class="card-body"
+          style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap"
+        >
+          <select
+            id="select-barbero"
+            onchange="cargarHorario()"
+            style="min-width: 220px"
+          >
+            <option value="">— Selecciona un barbero —</option>
+          </select>
+          <div
+            id="estado-carga"
+            style="color: #888; font-size: 0.85rem; display: none"
+          >
+            <span class="spinner"></span> Cargando...
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid de días -->
+      <div class="card" id="card-horario" style="display: none">
+        <div class="card-header">
+          <h2 id="titulo-horario">
+            <i
+              class="fa-solid fa-calendar-week"
+              style="color: #b8860b; margin-right: 0.5rem"
+            ></i
+            >Horario Semanal
+          </h2>
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap">
+            <button class="btn btn-outline" onclick="activarTodos()">
+              <i class="fa-solid fa-toggle-on"></i> Activar todos
+            </button>
+            <button class="btn btn-danger" onclick="desactivarTodos()">
+              <i class="fa-solid fa-toggle-off"></i> Desactivar todos
+            </button>
+            <button
+              class="btn btn-gold"
+              id="btn-guardar"
+              onclick="guardarHorario()"
+            >
+              <i class="fa-solid fa-floppy-disk"></i> Guardar Cambios
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="dias-grid" id="dias-grid">
+            <!-- Se genera dinámicamente -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Estado vacío -->
+      <div id="empty-state" class="empty-state" style="display: none">
+        <i class="fa-solid fa-calendar-xmark"></i>
+        <p>Este barbero no tiene horario configurado aún.</p>
+        <button
+          class="btn btn-gold"
+          style="margin-top: 1rem"
+          onclick="crearHorarioBase()"
+        >
+          <i class="fa-solid fa-plus"></i> Crear Horario Base
+        </button>
+      </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <span>The Titan Barbershop</span>
+      <p>Panel de Administración · Horarios</p>
+    </footer>
+
+    <script>
+      const API_BASE =
+        window.location.hostname === "localhost"
+          ? "http://localhost:4000/api"
+          : "/api";
+
+      function getToken() {
+        return localStorage.getItem("token");
+      }
+
+      const DIAS = [
+        { num: 0, nombre: "Domingo", icono: "fa-sun" },
+        { num: 1, nombre: "Lunes", icono: "fa-moon" },
+        { num: 2, nombre: "Martes", icono: "fa-star" },
+        { num: 3, nombre: "Miércoles", icono: "fa-star" },
+        { num: 4, nombre: "Jueves", icono: "fa-star" },
+        { num: 5, nombre: "Viernes", icono: "fa-star" },
+        { num: 6, nombre: "Sábado", icono: "fa-star" },
+      ];
+
+      let horarioActual = [];
+      let barberoActualId = null;
+
+      // ── Cargar lista de barberos ──
+      async function cargarBarberos() {
+        try {
+          const resp = await fetch(`${API_BASE}/admin/barberos`, {
+            headers: { Authorization: `Bearer ${getToken()}` },
+          });
+          if (!resp.ok) return;
+          const data = await resp.json();
+          const sel = document.getElementById("select-barbero");
+          data.forEach((b) => {
+            const opt = document.createElement("option");
+            opt.value = b.id_usuario;
+            opt.textContent = `${b.nombre} ${b.apellidoP || ""}`.trim();
+            sel.appendChild(opt);
+          });
+        } catch (err) {
+          console.error("Error cargando barberos:", err);
+        }
+      }
+
+      // ── Cargar horario del barbero seleccionado ──
+      async function cargarHorario() {
+        const id = document.getElementById("select-barbero").value;
+        if (!id) {
+          document.getElementById("card-horario").style.display = "none";
+          document.getElementById("empty-state").style.display = "none";
+          return;
+        }
+
+        barberoActualId = id;
+        document.getElementById("estado-carga").style.display = "flex";
+        document.getElementById("card-horario").style.display = "none";
+        document.getElementById("empty-state").style.display = "none";
+
+        try {
+          const resp = await fetch(`${API_BASE}/admin/horarios/${id}`, {
+            headers: { Authorization: `Bearer ${getToken()}` },
+          });
+          document.getElementById("estado-carga").style.display = "none";
+
+          if (!resp.ok) {
+            mostrarToast("Error al cargar horario", true);
+            return;
+          }
+
+          const data = await resp.json();
+          horarioActual = data;
+
+          if (!data.length) {
+            document.getElementById("empty-state").style.display = "block";
+            return;
+          }
+
+          renderHorario(data);
+          document.getElementById("card-horario").style.display = "block";
+
+          const nombre =
+            document.getElementById("select-barbero").selectedOptions[0]
+              .textContent;
+          document.getElementById("titulo-horario").innerHTML =
+            `<i class="fa-solid fa-calendar-week" style="color:#b8860b;margin-right:.5rem;"></i>
+           Horario de <strong style="color:#e0c97a;">${nombre}</strong>`;
+        } catch (err) {
+          document.getElementById("estado-carga").style.display = "none";
+          mostrarToast("Error de conexión", true);
+        }
+      }
+
+      // ── Renderizar grid de días ──
+      function renderHorario(data) {
+        const grid = document.getElementById("dias-grid");
+        grid.innerHTML = "";
+
+        DIAS.forEach((dia) => {
+          const registro = data.find((d) => d.dia_semana === dia.num);
+          const activo = registro ? registro.activo : false;
+          const inicio = registro
+            ? registro.hora_inicio.substring(0, 5)
+            : "11:00";
+          const fin = registro ? registro.hora_fin.substring(0, 5) : "21:00";
+          const duracion = registro ? registro.duracion_minutos : 45;
+          const existe = !!registro;
+
+          grid.innerHTML += `
+          <div class="dia-card ${activo ? "activo" : "inactivo"}" id="dia-card-${dia.num}">
+            <div class="dia-header">
+              <span class="dia-nombre">
+                <i class="fa-solid ${dia.icono}"></i>
+                ${dia.nombre}
+              </span>
+              <div style="display:flex;align-items:center;gap:.5rem;">
+                <span class="badge ${activo ? "badge-on" : "badge-off"}" id="badge-${dia.num}">
+                  ${activo ? "Activo" : "Inactivo"}
+                </span>
+                <label class="toggle">
+                  <input type="checkbox" id="activo-${dia.num}"
+                    ${activo ? "checked" : ""}
+                    onchange="toggleDia(${dia.num})" />
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+            <div class="dia-fields" id="fields-${dia.num}" style="${activo ? "" : "opacity:.4;pointer-events:none;"}">
+              <div class="dia-field">
+                <label><i class="fa-solid fa-play" style="color:#b8860b;margin-right:.3rem;"></i>Hora inicio</label>
+                <input type="time" id="inicio-${dia.num}" value="${inicio}" />
+              </div>
+              <div class="dia-field">
+                <label><i class="fa-solid fa-stop" style="color:#b8860b;margin-right:.3rem;"></i>Hora fin</label>
+                <input type="time" id="fin-${dia.num}" value="${fin}" />
+              </div>
+              <div class="dia-field">
+                <label><i class="fa-solid fa-hourglass-half" style="color:#b8860b;margin-right:.3rem;"></i>Duración por cita (min)</label>
+                <input type="number" id="duracion-${dia.num}" value="${duracion}" min="15" max="180" step="5" />
+              </div>
+            </div>
+            <input type="hidden" id="existe-${dia.num}" value="${existe ? "1" : "0"}" />
+          </div>
+        `;
+        });
+      }
+
+      // ── Toggle día activo/inactivo ──
+      function toggleDia(num) {
+        const activo = document.getElementById(`activo-${num}`).checked;
+        const card = document.getElementById(`dia-card-${num}`);
+        const badge = document.getElementById(`badge-${num}`);
+        const fields = document.getElementById(`fields-${num}`);
+
+        card.className = `dia-card ${activo ? "activo" : "inactivo"}`;
+        badge.className = `badge ${activo ? "badge-on" : "badge-off"}`;
+        badge.textContent = activo ? "Activo" : "Inactivo";
+        fields.style.opacity = activo ? "1" : ".4";
+        fields.style.pointerEvents = activo ? "auto" : "none";
+      }
+
+      function activarTodos() {
+        DIAS.forEach((d) => {
+          document.getElementById(`activo-${d.num}`).checked = true;
+          toggleDia(d.num);
+        });
+      }
+      function desactivarTodos() {
+        DIAS.forEach((d) => {
+          document.getElementById(`activo-${d.num}`).checked = false;
+          toggleDia(d.num);
+        });
+      }
+
+      // ── Guardar horario ──
+      async function guardarHorario() {
+        const btn = document.getElementById("btn-guardar");
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner"></span> Guardando...';
+
+        const payload = DIAS.map((dia) => ({
+          dia_semana: dia.num,
+          hora_inicio:
+            document.getElementById(`inicio-${dia.num}`).value + ":00",
+          hora_fin: document.getElementById(`fin-${dia.num}`).value + ":00",
+          duracion_minutos: parseInt(
+            document.getElementById(`duracion-${dia.num}`).value,
+          ),
+          activo: document.getElementById(`activo-${dia.num}`).checked ? 1 : 0,
+          existe: document.getElementById(`existe-${dia.num}`).value === "1",
+        }));
+
+        try {
+          const resp = await fetch(
+            `${API_BASE}/admin/horarios/${barberoActualId}`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${getToken()}`,
+              },
+              body: JSON.stringify({ horario: payload }),
+            },
+          );
+
+          if (resp.ok) {
+            mostrarToast("Horario guardado correctamente ✓");
+            await cargarHorario(); // refresca
+          } else {
+            const d = await resp.json().catch(() => ({}));
+            mostrarToast(d.error || "Error al guardar", true);
+          }
+        } catch (err) {
+          mostrarToast("Error de conexión", true);
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML =
+            '<i class="fa-solid fa-floppy-disk"></i> Guardar Cambios';
+        }
+      }
+
+      // ── Crear horario base (si no existe) ──
+      async function crearHorarioBase() {
+        const defaultHorario = [2, 3, 4, 5, 6].map((d) => ({
+          dia_semana: d,
+          hora_inicio: "11:00:00",
+          hora_fin: "21:00:00",
+          duracion_minutos: 45,
+          activo: 1,
+          existe: false,
+        }));
+        defaultHorario.push({
+          dia_semana: 0,
+          hora_inicio: "11:00:00",
+          hora_fin: "19:00:00",
+          duracion_minutos: 45,
+          activo: 1,
+          existe: false,
+        });
+
+        try {
+          const resp = await fetch(
+            `${API_BASE}/admin/horarios/${barberoActualId}`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${getToken()}`,
+              },
+              body: JSON.stringify({ horario: defaultHorario }),
+            },
+          );
+          if (resp.ok) {
+            mostrarToast("Horario base creado ✓");
+            await cargarHorario();
+          } else {
+            mostrarToast("Error al crear horario", true);
+          }
+        } catch {
+          mostrarToast("Error de conexión", true);
+        }
+      }
+
+      // ── Toast ──
+      function mostrarToast(msg, esError = false) {
+        const t = document.createElement("div");
+        t.className = `toast ${esError ? "err" : "ok"}`;
+        t.textContent = msg;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 3500);
+      }
+
+      // ── Init ──
+      document.addEventListener("DOMContentLoaded", () => {
+        const token = getToken();
+        if (!token) {
+          window.location.href = "/";
+          return;
+        }
+        try {
+          const p = JSON.parse(atob(token.split(".")[1]));
+          if (p.rol !== "admin") {
+            window.location.href = "/home";
+            return;
+          }
+        } catch {
+          window.location.href = "/";
+          return;
+        }
+
+        cargarBarberos();
+      });
+
+      // Logout: handled by the nav pill href="/" directly.
+      // If a dedicated logout link exists, wire it up safely.
+      const logoutLink = document.getElementById("logout-link");
+      if (logoutLink) {
+        logoutLink.addEventListener("click", (e) => {
+          e.preventDefault();
+          localStorage.removeItem("token");
+          window.location.href = "/";
+        });
+      }
+    </script>
+  </body>
+</html>
