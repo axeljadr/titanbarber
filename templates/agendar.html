@@ -528,8 +528,7 @@
               opt.dataset.nombre.toLowerCase().includes("diseño")
             ) {
               notasLabel &&
-                (notasLabel.textContent =
-                  "✏️ Describe tu diseño (obligatorio)");
+                (notasLabel.textContent = "Describe tu diseño (obligatorio)");
               document.getElementById("notes").required = true;
             } else {
               notasLabel && (notasLabel.textContent = "Notas adicionales");

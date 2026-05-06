@@ -1930,12 +1930,6 @@ app.get("/api/horario-dia-barbero", verificarToken, async (req, res) => {
     const fechaObj = new Date(fecha + "T00:00:00");
     const diaSemana = fechaObj.getDay();
 
-    console.log("DEBUG /api/horario-dia-barbero:", {
-      fecha,
-      id_barbero,
-      diaSemana,
-    });
-
     const sem = await pool
       .request()
       .input("id_barbero", mssql.Int, id_barbero)
@@ -1948,8 +1942,6 @@ app.get("/api/horario-dia-barbero", verificarToken, async (req, res) => {
       `);
 
     const bloques = sem.recordset;
-
-    console.log("DEBUG bloques encontrados:", bloques);
 
     if (bloques.length === 0) {
       return res.json({ horarioTipo: "semanal", slots: [] });
@@ -1980,8 +1972,6 @@ app.get("/api/horario-dia-barbero", verificarToken, async (req, res) => {
       }
     }
 
-    console.log("DEBUG slots generados:", slots.length);
-
     const citasRes = await pool
       .request()
       .input("id_barbero", mssql.Int, id_barbero)
@@ -1994,7 +1984,6 @@ app.get("/api/horario-dia-barbero", verificarToken, async (req, res) => {
       `);
 
     const citas = citasRes.recordset || [];
-    console.log("DEBUG citas encontradas:", citas);
 
     const citasPorHora = new Set(citas.map((c) => c.hora.slice(0, 5)));
 
@@ -2002,8 +1991,6 @@ app.get("/api/horario-dia-barbero", verificarToken, async (req, res) => {
       ...s,
       disponible: !citasPorHora.has(s.hora),
     }));
-
-    console.log("DEBUG slots finales:", slotsFinal);
 
     res.json({ horarioTipo: "semanal", slots: slotsFinal });
   } catch (err) {
